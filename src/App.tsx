@@ -132,7 +132,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       dialogComponent = (
         <DialogComponent
           onValueChange={dialogResponse}
-          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          maxAllowedCount={maxAllowedCount}
           subtext={subtitle}
         />
       );
@@ -186,7 +186,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       dialogComponent = (
         <DialogComponent
           onValueChange={dialogResponse}
-          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          maxAllowedCount={maxAllowedCount}
           subtext={subtitle}
         />
       );
@@ -229,7 +229,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       dialogComponent = (
         <DialogComponent
           onValueChange={dialogResponse}
-          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          maxAllowedCount={maxAllowedCount}
           subtext={subtitle}
         />
       );

@@ -1,30 +1,33 @@
-import * as React from 'react';
-import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
-import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
-import { useId, useBoolean } from '@fluentui/react-hooks';
-import styles from './dialog.module.css';
+import * as React from "react";
+import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
+import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
+import { useId, useBoolean } from "@fluentui/react-hooks";
+import styles from "./dialog.module.css";
 
 const dialogStyles = { main: { maxWidth: 450 } };
 
 type ChildComponentProps = {
-  maxAllowedCountTearSheetDetails: number;
+  maxAllowedCount: number;
   onValueChange: (newValue: boolean) => void;
   subtext?: string;
-}
+};
 
-export const DialogComponent:React.FC<ChildComponentProps> = ({onValueChange, maxAllowedCountTearSheetDetails, subtext}) => {
+export const DialogComponent: React.FC<ChildComponentProps> = ({
+  onValueChange,
+  maxAllowedCount: maxDetails,
+  subtext,
+}) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
-  const labelId: string = useId('dialogLabel');
-  const subTextId: string = useId('subTextLabel');
+  const labelId: string = useId("dialogLabel");
+  const subTextId: string = useId("subTextLabel");
 
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: 'Create New Tear Sheet',
-    closeButtonAriaLabel: 'Close',
+    title: "Create New Tear Sheet",
+    closeButtonAriaLabel: "Close",
     subText: subtext,
   };
-  
- 
+
   const modalProps = React.useMemo(
     () => ({
       titleAriaId: labelId,
@@ -32,23 +35,22 @@ export const DialogComponent:React.FC<ChildComponentProps> = ({onValueChange, ma
       isBlocking: false,
       isModeless: true,
       isDarkOverlay: false,
-      styles: dialogStyles
+      styles: dialogStyles,
     }),
-    [labelId, subTextId],
+    [labelId, subTextId]
   );
 
   const confirm = () => {
     const newValue = true;
     toggleHideDialog();
     onValueChange(newValue);
-};
+  };
 
-const cancel = () => {
-  const newValue = false;
-  toggleHideDialog();
-  onValueChange(newValue);
- };
-
+  const cancel = () => {
+    const newValue = false;
+    toggleHideDialog();
+    onValueChange(newValue);
+  };
 
   return (
     <>
@@ -65,6 +67,4 @@ const cancel = () => {
       </Dialog>
     </>
   );
-
-
 };
