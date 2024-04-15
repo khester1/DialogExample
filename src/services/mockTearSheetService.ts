@@ -1,20 +1,11 @@
- // mockTearSheetService.js
+import mockTearSheetData from "../data/mockTearSheetData";
 
 export const fetchTearSheets = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const mockResponse = {
         ok: true,
-        json: () => Promise.resolve({
-          TearSheets: [
-            { Id: 'TS1', Name: 'Engineering Team', CandidateCount: '5' },
-            { Id: 'TS2', Name: 'Marketing Team', CandidateCount: '3' }
-          ],
-          ExeedLimit: false,
-          ISRecruitingManager: false,
-          MaxAllowedCountTearSheetDetails: 10,
-          MaxTearSheetLimit: 2
-        })
+        json: () => Promise.resolve(mockTearSheetData) // Directly pass the mock data object
       };
       resolve(mockResponse);
     }, 1000); // Simulate a network delay

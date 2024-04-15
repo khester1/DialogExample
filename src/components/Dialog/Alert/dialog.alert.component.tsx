@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
-import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
-import { hiddenContentStyle, mergeStyles } from '@fluentui/react/lib/Styling';
-import { Toggle } from '@fluentui/react/lib/Toggle';
-import { ContextualMenu } from '@fluentui/react/lib/ContextualMenu';
-import { useId, useBoolean } from '@fluentui/react-hooks';
-import styles from './dialog.module.css';
+import * as React from "react";
+import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
+import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
+import { hiddenContentStyle, mergeStyles } from "@fluentui/react/lib/Styling";
+import { Toggle } from "@fluentui/react/lib/Toggle";
+import { ContextualMenu } from "@fluentui/react/lib/ContextualMenu";
+import { useId, useBoolean } from "@fluentui/react-hooks";
+import styles from "./dialog.module.css";
 
 const dialogStyles = { main: { maxWidth: 450 } };
 const dragOptions = {
-  moveMenuItemText: 'Move',
-  closeMenuItemText: 'Close',
+  moveMenuItemText: "Move",
+  closeMenuItemText: "Close",
   menu: ContextualMenu,
   keepInBounds: true,
 };
@@ -18,19 +18,22 @@ const dragOptions = {
 type ChildComponentProps = {
   subtext?: string;
   onValueChange: (newValue: string) => void;
-}
+};
 
-export const DialogAlertComponent: React.FC<ChildComponentProps> = ({onValueChange, subtext}) => {
+export const DialogAlertComponent: React.FC<ChildComponentProps> = ({
+  onValueChange,
+  subtext,
+}) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const [isDraggable, { toggle: toggleIsDraggable }] = useBoolean(false);
-  const labelId: string = useId('dialogLabel');
-  const subTextId: string = useId('subTextLabel');
+  const labelId: string = useId("dialogLabel");
+  const subTextId: string = useId("subTextLabel");
 
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: 'Tear Sheet Limit Reached', 
-    closeButtonAriaLabel: 'Close',
-    subText:  subtext,
+    title: "Limit Reached",
+    closeButtonAriaLabel: "Close",
+    subText: subtext,
   };
 
   const modalProps = React.useMemo(
@@ -43,12 +46,12 @@ export const DialogAlertComponent: React.FC<ChildComponentProps> = ({onValueChan
       isDarkOverlay: false,
       dragOptions: isDraggable ? dragOptions : undefined,
     }),
-    [isDraggable, labelId, subTextId],
+    [isDraggable, labelId, subTextId]
   );
   const updateValue = () => {
     toggleHideDialog();
     onValueChange("Success");
-};
+  };
 
   return (
     <>

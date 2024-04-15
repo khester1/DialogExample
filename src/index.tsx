@@ -1,48 +1,62 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
 
 let data: any;
 
 let testUserId = "11111115-0000-0000-0000-000000000000";
-let testIds = ["b4ba8c17-fd98-40c4-b18e-24a37d91765a","b4ba1c11-fd98-40c4-b18e-24a37d91765a"];
+let testIds = [
+  "0a3f535e-7ce9-445e-bde8-ecefce3d06d5", //NOTE:: This is mock data, please replace with actual data
+  "d85a2167-f6c5-4f87-8734-3e80b2f3aef9",
+];
 
-  if (window.location.hostname === "localhost") {
+if (window.location.hostname === "localhost") {
+  data = {
+    requestFrom: "Contact",
+    selectedItems: testIds,
+    userId: testUserId,
+  };
+} else {
+  // Following code parses URL of dialog to extract required data including "data" parameter
+  const queryString = window.location.search.substring(1);
+  let params: any = {};
+  const queryStringParts = queryString.split("&");
+  for (let i = 0; i < queryStringParts.length; i++) {
+    const pieces = queryStringParts[i].split("=");
+    params[pieces[0].toLowerCase()] =
+      pieces.length === 1 ? null : decodeURIComponent(pieces[1]);
+  }
+
+  // Deserializing of the data parameter
+  if (params.data) {
+    data = JSON.parse(params.data);
+    alert(
+      "Selected Items: " +
+        data.selectedItems +
+        " Request From: " +
+        data.requestFrom +
+        " User Id: " +
+        data.userId
+    );
+  } else {
     data = {
-      requestFrom: "Submittal",
-      selectedItems: testIds, 
-      userId: testUserId
+      requestFrom: "Contact",
+      selectedItems: testIds,
+      userId: testUserId,
     };
-  
   }
-  else {
-    //following code parses url of dialog to extract required data including "data" parameter
-    const queryString = window.location.search.substring(1);
-    let params: any = {};
-    const queryStringParts = queryString.split("&");
-    for (let i = 0; i < queryStringParts.length; i++) {
-      const pieces = queryStringParts[i].split("=");
-      params[pieces[0].toLowerCase()] = pieces.length === 1 ? null : decodeURIComponent(pieces[1]);
-    }
-   
-    //deserializing of the data parameter
-    if (params.data) {
-      data = JSON.parse(params.data);
-      alert("Selected Items: " + data.selectedItems + " Request From: " + data.requestFrom + " User Id: " + data.userId);
+}
 
-    } else {
+const container = document.getElementById("root");
+const root = createRoot(container!);
 
-      data = {
-        requestFrom: "Submittal",
-        selectedItems: testIds, 
-        userId: testUserId
-      };
-    }
-  }
-   
-
-//rendering of application and passing parameters inside
-ReactDOM.render(
-  <App selectedItems={data.selectedItems} requestFrom={data.requestFrom} userId={data.userId} />,
-  document.getElementById('root')
+// Rendering of application and passing parameters inside
+root.render(
+  <React.StrictMode>
+    <App
+      selectedItems={data.selectedItems}
+      requestFrom={data.requestFrom}
+      userId={data.userId}
+    />
+  </React.StrictMode>
 );

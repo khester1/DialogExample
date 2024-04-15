@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import { DialogComponent } from './components/Dialog/Default/dialog.component';
-import { DialogChoiceComponent } from './components/Dialog/ChoiceGroup/dialog.choice.component';
-import { DialogAlertComponent } from './components/Dialog/Alert/dialog.alert.component';
-import { DialogThreeButtonComponent } from './components/Dialog/ThreeButton/dialog.threebuttton.component';
-import { ProgressSpinnerComponent } from './components/Progress/Spinner/progess.spinner.component';
-import { DialogChoiceThreeButtonComponent } from './components/Dialog/ChoiceGroup/dialog.choicethreebutton.component';
-import { MessageBarComponent } from './components/MessageBar/messagebar.component';
-import { fetchTearSheets } from './services';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { DialogComponent } from "./components/Dialog/Default/dialog.component";
+import { DialogChoiceComponent } from "./components/Dialog/ChoiceGroup/dialog.choice.component";
+import { DialogAlertComponent } from "./components/Dialog/Alert/dialog.alert.component";
+import { DialogThreeButtonComponent } from "./components/Dialog/ThreeButton/dialog.threebuttton.component";
+import { ProgressSpinnerComponent } from "./components/Progress/Spinner/progess.spinner.component";
+import { DialogChoiceThreeButtonComponent } from "./components/Dialog/ChoiceGroup/dialog.choicethreebutton.component";
+import { MessageBarComponent } from "./components/MessageBar/messagebar.component";
+import { fetchTearSheets } from "./services";
 
 export interface ICustomDialogProps {
   selectedItems: string[] | undefined;
@@ -25,7 +25,7 @@ interface CreateTearSheetDetails {
   EntityName: string | undefined;
   ListIds: string[] | undefined;
   Action: string;
-  TearSheetId?: string; 
+  TearSheetId?: string;
 }
 
 interface TearSheetRequest {
@@ -33,13 +33,17 @@ interface TearSheetRequest {
   CreateTearSheet: CreateTearSheetDetails;
 }
 
-const DialogExample: React.FC<ICustomDialogProps> = (props: ICustomDialogProps) => {
+const DialogExample: React.FC<ICustomDialogProps> = (
+  props: ICustomDialogProps
+) => {
   const [ids, setIds] = useState<string[] | undefined>(props?.selectedItems);
-  const [from, setFrom] =  useState<string | undefined>(props?.requestFrom);
+  const [from, setFrom] = useState<string | undefined>(props?.requestFrom);
   const [userid, setUserid] = useState<string | undefined>(props?.userId);
-  const [alertValue, setDialogResponseAlert] = useState<string>('');
+  const [alertValue, setDialogResponseAlert] = useState<string>("");
   const [confirmValue, setDialogResponseConfirm] = useState<boolean>(false);
-  const [selectedTearSheet, setSelectedTearSheet] = useState<TearSheet | null>(null);
+  const [selectedTearSheet, setSelectedTearSheet] = useState<TearSheet | null>(
+    null
+  );
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [tearSheets, setTearSheets] = useState([]);
@@ -47,180 +51,202 @@ const DialogExample: React.FC<ICustomDialogProps> = (props: ICustomDialogProps) 
   const [isRecruitingManager, setIsManager] = useState(false);
   const [maxAllowedCount, setMaxAllowedCount] = useState(0);
   const [maxTearSheetLimit, setMaxLimit] = useState(0);
-  
+
   debugger;
-   var myHeaders = new Headers();
-   myHeaders.append("Content-Type", "application/json");
-   
-   var raw = JSON.stringify({
-    "RequestType": "ValidateTearSheetCreation",
-    "UserId": userid
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    RequestType: "ValidateTearSheetCreation",
+    UserId: userid,
   });
   useEffect(() => {
     const requestOptions: RequestInit = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "RequestType": "ValidateTearSheetCreation",
-        "UserId": userid
+        RequestType: "ValidateTearSheetCreation",
+        UserId: userid,
       }),
-      redirect: 'follow'
+      redirect: "follow",
     };
 
     fetchTearSheets(requestOptions)
-      .then(response => (response as Response).json())
-      .then(responseData => {
+      .then((response) => (response as Response).json())
+      .then((responseData) => {
         setData(responseData || []);
         setTearSheets(responseData?.TearSheets);
-        setExceedLimit(responseData?.ExeedLimit);
+        setExceedLimit(responseData?.ExceedLimit);
         setIsManager(responseData?.ISManager);
-        setMaxAllowedCount(responseData?.MaxAllowedCountTearSheetDetails);
-        setMaxLimit(responseData?.MaxTearSheetLimit);
+        setMaxAllowedCount(responseData?.MaxAllowedCount);
+        setMaxLimit(responseData?.MaxLimit);
         setIsLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Fetching data failed: ", error);
         setIsLoading(false);
       });
   }, [userid]);
 
-if (isLoading) {
-  return <ProgressSpinnerComponent message='Loading...'/>;
-}
+  if (isLoading) {
+    return <ProgressSpinnerComponent message="Loading..." />;
+  }
 
-if (!data) {
-  setIsLoading(false);
-  
-  return <div>No data available</div>;
-}
+  if (!data) {
+    setIsLoading(false);
 
-//Get Candidate Count
-const totalCandidatesCount = countTotalCandidates(tearSheets);
+    return <div>No data available</div>;
+  }
 
-function countTotalCandidates(tearSheets: any[]) {
-  if (!tearSheets) {
+  //Get Candidate Count
+  const totalCandidatesCount = countTotalCandidates(tearSheets);
+
+  function countTotalCandidates(tearSheets: any[]) {
+    if (!tearSheets) {
       return 0;
-  }
-  return tearSheets.reduce((total, tearSheet) => {
+    }
+    return tearSheets.reduce((total, tearSheet) => {
       return total + parseInt(tearSheet.CandidateCount, 10);
-  }, 0);
-}
+    }, 0);
+  }
 
-//Dialog Component Logic
-  const { dialogChoiceResponse, dialogResponse, dialogAlertResponse, 
-    dialogThreeButtonResponse, dialogChoiceThreeButtonResponse } = handleDialogResponse();
+  //Dialog Component Logic
+  const {
+    dialogChoiceResponse,
+    dialogResponse,
+    dialogAlertResponse,
+    dialogThreeButtonResponse,
+    dialogChoiceThreeButtonResponse,
+  } = handleDialogResponse();
 
-let dialogComponent = null;
+  let dialogComponent = null;
 
-//Manager
-if (isRecruitingManager) {
-
+  //Manager
+  if (isRecruitingManager) {
     // If there are no candidates in any tear sheet (Manager)
-   if (totalCandidatesCount === 0) {
-    
-      let subtitle = `You don't have a tear sheet generated for today,
-      would you like to create one?`;
-  
-      dialogComponent = <DialogComponent 
-      onValueChange={dialogResponse}
-      maxAllowedCountTearSheetDetails={maxAllowedCount}
-      subtext={subtitle}/>;
-    } 
+    if (totalCandidatesCount === 0) {
+      let subtitle = `This is a Manager. Total number of selected candidates: ${ids?.length}.`;
 
-  // If there are multiple tear sheets (Manager)
-  else if (tearSheets.length > 1) {
-   
-    let subtitle = `Select the tear sheet you would like to merge the selected candidates into or click 'New' to create a new tear sheet:`;
-    
-    dialogComponent = <DialogChoiceThreeButtonComponent tearSheets={tearSheets as TearSheet[]}
-    onTearSheetSelect={dialogChoiceThreeButtonResponse}
-    subtext={subtitle} />;
-  } 
+      dialogComponent = (
+        <DialogComponent
+          onValueChange={dialogResponse}
+          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          subtext={subtitle}
+        />
+      );
+    }
 
-  // If there is only one tear sheet (Manager)
-  else if (tearSheets.length === 1) {
+    // If there are multiple tear sheets (Manager)
+    else if (tearSheets.length > 1) {
+      let subtitle = `This is a Manager with more than 1 tearsheet and ${totalCandidatesCount} candidates.`;
 
-    let subtitle = `You already have a tear sheet generated for today containing ${totalCandidatesCount} candidates. 
+      dialogComponent = (
+        <DialogChoiceThreeButtonComponent
+          tearSheets={tearSheets as TearSheet[]}
+          onTearSheetSelect={dialogChoiceThreeButtonResponse}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    // If there is only one tear sheet (Manager)
+    else if (tearSheets.length === 1) {
+      let subtitle = `This is a manager with 1 tearsheet and  ${totalCandidatesCount} candidates. 
     Would you like to create a new one?`;
 
-    dialogComponent = <DialogThreeButtonComponent 
-    value={totalCandidatesCount} onValueChange={dialogThreeButtonResponse} 
-    subtext= {subtitle}/>;
+      dialogComponent = (
+        <DialogThreeButtonComponent
+          value={totalCandidatesCount}
+          onValueChange={dialogThreeButtonResponse}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    //Reruiter
+  } else {
+    // If the user is not a recruiting  manager and the limit is exceeded (Recruiter)
+    if (exceedLimit == true || totalCandidatesCount >= maxAllowedCount) {
+      let subtitle = `This is a recruiter with Exceed limit true.`;
+
+      dialogComponent = (
+        <DialogAlertComponent
+          onValueChange={dialogAlertResponse}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    // If the limit is not exceeded and there are no tear sheets (Recruiter)
+    else if (totalCandidatesCount === 0) {
+      let subtitle = `This is a recruiter with no tearsheets and ${ids?.length} candidates.`;
+
+      dialogComponent = (
+        <DialogComponent
+          onValueChange={dialogResponse}
+          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    // If the limit is not exceeded and there are multiple tear sheets (Recruiter)
+    else if (tearSheets.length > 1) {
+      let subtitle = `This is a recuiter with more than 1 tearsheet and ${totalCandidatesCount} candidates.`;
+
+      dialogComponent = (
+        <DialogChoiceComponent
+          tearSheets={tearSheets as TearSheet[]}
+          onTearSheetSelect={dialogChoiceResponse}
+          maxAllowed={maxAllowedCount}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    // If the limit is not exceeded and there is only one tear sheet (Recruiter)
+    else if (tearSheets.length == 1 && totalCandidatesCount < maxAllowedCount) {
+      let subtitle = `This is a recruiter with 1 tearsheet and ${totalCandidatesCount} candidates.`;
+
+      dialogComponent = (
+        <DialogThreeButtonComponent
+          value={totalCandidatesCount}
+          onValueChange={dialogThreeButtonResponse}
+          subtext={subtitle}
+        />
+      );
+    }
+
+    // If there is only one tear sheet and the total number of candidates is greater than or equal to the maximum allowed count (Manager)
+    else if (
+      tearSheets.length == 1 &&
+      totalCandidatesCount >= maxAllowedCount
+    ) {
+      let subtitle = `This is a recruiter with 1 tearsheet and ${totalCandidatesCount} candidates. Would you like to create a new one?`;
+
+      dialogComponent = (
+        <DialogComponent
+          onValueChange={dialogResponse}
+          maxAllowedCountTearSheetDetails={maxAllowedCount}
+          subtext={subtitle}
+        />
+      );
+    }
   }
-
-  //Reruiter
-} else { 
-  // If the user is not a recruiting  manager and the limit is exceeded (Recruiter)
-  if (exceedLimit == true) {
- 
-    let subtitle = `You already have a tear sheet generated for today that contains the daily maximum number of candidates.`;
- 
-    dialogComponent = <DialogAlertComponent 
-    onValueChange={dialogAlertResponse} 
-    subtext={subtitle}/>;
-  } 
-
-  // If the limit is not exceeded and there are no tear sheets (Recruiter)
-  else if (totalCandidatesCount === 0) {
-    
-    let subtitle = `You don't have a tear sheet generated for today,
-    would you like to create one and add up to ${maxAllowedCount} selected candidates?`;
-
-    dialogComponent = <DialogComponent 
-    onValueChange={dialogResponse}
-    maxAllowedCountTearSheetDetails={maxAllowedCount}
-    subtext= {subtitle}/>;
-  }
-
-  // If the limit is not exceeded and there are multiple tear sheets (Recruiter)
-  else if (tearSheets.length > 1) {
-    let subtitle = `You already have ${maxTearSheetLimit} tear sheets for today containing ${totalCandidatesCount} candidates. 
-    Select the tear sheet you would like to merge the selected candidates into (up to the daily limit of ${maxAllowedCount}):`;
-
-    dialogComponent = <DialogChoiceComponent tearSheets={tearSheets as TearSheet[]}
-    onTearSheetSelect={dialogChoiceResponse}
-    maxAllowed={maxAllowedCount}
-    subtext={subtitle}/>;
-  } 
-
-  // If the limit is not exceeded and there is only one tear sheet (Recruiter)
-  else if (tearSheets.length == 1 && totalCandidatesCount < maxAllowedCount) {
-    let subtitle =  `You already have a tear sheet generated for today containing ${totalCandidatesCount} candidates. 
-    Would you like to merge the selected candidates into that tear sheet or create a new one?`;
-    
-    dialogComponent = <DialogThreeButtonComponent 
-    value={totalCandidatesCount} 
-    onValueChange={dialogThreeButtonResponse}
-    subtext= {subtitle} />;
-  }
-  
-  // If there is only one tear sheet and the total number of candidates is greater than or equal to the maximum allowed count (Manager)
-  else if (tearSheets.length == 1 && totalCandidatesCount >= maxAllowedCount) {
-    let subtitle =  `You already have a tear sheet generated for today containing ${totalCandidatesCount} candidates. 
-    Would you like to create a new one?`;
-    
-    dialogComponent = <DialogComponent 
-    onValueChange={dialogResponse}
-    maxAllowedCountTearSheetDetails={maxAllowedCount}
-    subtext= {subtitle}/>;
-  }
-}
   return (
-    <> 
-    {dialogComponent}
-  {/* <MessageBarComponent/> */}
-  </>
-    );
+    <>
+      {dialogComponent}
+      {/* <MessageBarComponent/> */}
+    </>
+  );
 
   function handleDialogResponse() {
-  
     const dialogChoiceResponse = (tearSheet: TearSheet) => {
       setSelectedTearSheet(tearSheet);
       executeTearSheetAction("Merge", tearSheet.Id);
     };
-
 
     const dialogAlertResponse = (value: string) => {
       setDialogResponseAlert(value);
@@ -228,52 +254,47 @@ if (isRecruitingManager) {
 
     const dialogResponse = (value: boolean) => {
       setDialogResponseConfirm(value);
-      if (value) {   
+      if (value) {
         executeTearSheetAction("New");
-      }
-      else {
+      } else {
       }
     };
 
     const dialogThreeButtonResponse = (value: string) => {
-
       switch (value) {
         case "Cancel":
           alert("Cancel");
           break;
         case "Merge":
-         
           executeTearSheetAction("Merge", tearSheets[0]);
           break;
         case "Create":
-         
           executeTearSheetAction("New");
           break;
       }
-
     };
 
     const dialogChoiceThreeButtonResponse = (value: string) => {
-        
       if (value === "Create") {
-     
         executeTearSheetAction("New");
-      }  
-      else if (value === "Cancel")
-      {
+      } else if (value === "Cancel") {
         alert("Cancel");
-      }
-      else {
-       
+      } else {
         executeTearSheetAction("Merge", value);
-      } 
-    }
-    return { dialogChoiceResponse, dialogResponse, dialogAlertResponse, dialogThreeButtonResponse, dialogChoiceThreeButtonResponse };
+      }
+    };
+    return {
+      dialogChoiceResponse,
+      dialogResponse,
+      dialogAlertResponse,
+      dialogThreeButtonResponse,
+      dialogChoiceThreeButtonResponse,
+    };
 
-    function executeTearSheetAction(actionType: string, tearSheetId? : string) {
+    function executeTearSheetAction(actionType: string, tearSheetId?: string) {
       alert(`Action: ${actionType} TearSheetId: ${tearSheetId}`);
     }
   }
-}
+};
 
 export default DialogExample;
