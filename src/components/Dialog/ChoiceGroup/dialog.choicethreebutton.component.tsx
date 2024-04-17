@@ -32,7 +32,7 @@ export const DialogChoiceThreeButtonComponent: React.FC<
   };
   const options: IChoiceGroupOption[] = dialogOptions.map((option) => ({
     key: option.Id,
-    text: option.Name + " (" + option.CandidateCount + ")",
+    text: option.Name + " (" + option.Count + ")",
   }));
   const [selectedOption, setSelectedOption] = React.useState<any>(
     options[0].key

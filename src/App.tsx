@@ -3,10 +3,7 @@ import "./App.css";
 import { DialogComponent } from "./components/Dialog/Default/dialog.component";
 import { DialogChoiceComponent } from "./components/Dialog/ChoiceGroup/dialog.choice.component";
 import { DialogAlertComponent } from "./components/Dialog/Alert/dialog.alert.component";
-import { DialogThreeButtonComponent } from "./components/Dialog/ThreeButton/dialog.threebuttton.component";
 import { ProgressSpinnerComponent } from "./components/Progress/Spinner/progess.spinner.component";
-import { DialogChoiceThreeButtonComponent } from "./components/Dialog/ChoiceGroup/dialog.choicethreebutton.component";
-import { MessageBarComponent } from "./components/MessageBar/messagebar.component";
 
 import { DialogProps } from "./base.interface";
 import { fetchData } from "./services/mockService";
@@ -74,32 +71,27 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   }
 
   //Get Candidate Count
-  const totalCandidatesCount = countTotalCandidates(data);
+  const totalCount = countTotalCandidates(data);
 
   function countTotalCandidates(data: DialogProps[]) {
     if (!data) {
       return 0;
     }
     return data.reduce((total, options) => {
-      return total + parseInt(options.CandidateCount, 10);
+      return total + parseInt(options.Count, 10);
     }, 0);
   }
 
   //Dialog Component Logic
-  const {
-    dialogChoiceResponse,
-    dialogResponse,
-    dialogAlertResponse,
-    dialogThreeButtonResponse,
-    dialogChoiceThreeButtonResponse,
-  } = handleDialogResponse();
+  const { dialogChoiceResponse, dialogResponse, dialogAlertResponse } =
+    handleDialogResponse();
 
   let dialogComponent = null;
 
   //Manager
   if (isRecruitingManager) {
     // If there are no candidates in any tear sheet (Manager)
-    if (totalCandidatesCount === 0) {
+    if (totalCount === 0) {
       let subtitle = `This is a Manager. Total number of selected candidates: ${ids?.length}.`;
 
       dialogComponent = (
@@ -110,38 +102,10 @@ const DialogExample: React.FC<ICustomDialogProps> = (
         />
       );
     }
-
-    // If there are multiple tear sheets (Manager)
-    else if (data.length > 1) {
-      let subtitle = `This is a Manager with more than 1 data and ${totalCandidatesCount} candidates.`;
-
-      dialogComponent = (
-        <DialogChoiceThreeButtonComponent
-          options={data as DialogProps[]}
-          onSelect={dialogChoiceThreeButtonResponse}
-          subtext={subtitle}
-        />
-      );
-    }
-
-    // If there is only one tear sheet (Manager)
-    else if (data.length === 1) {
-      let subtitle = `This is a manager with 1 data and  ${totalCandidatesCount} candidates. 
-    Would you like to create a new one?`;
-
-      dialogComponent = (
-        <DialogThreeButtonComponent
-          value={totalCandidatesCount}
-          onValueChange={dialogThreeButtonResponse}
-          subtext={subtitle}
-        />
-      );
-    }
-
     //Reruiter
   } else {
     // If the user is not a recruiting  manager and the limit is exceeded (Recruiter)
-    if (exceedLimit == true || totalCandidatesCount >= maxAllowedCount) {
+    if (exceedLimit == true || totalCount >= maxAllowedCount) {
       let subtitle = `This is a recruiter with Exceed limit true.`;
 
       dialogComponent = (
@@ -152,22 +116,9 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       );
     }
 
-    // If the limit is not exceeded and there are no tear sheets (Recruiter)
-    else if (totalCandidatesCount === 0) {
-      let subtitle = `This is a recruiter with no datas and ${ids?.length} candidates.`;
-
-      dialogComponent = (
-        <DialogComponent
-          onValueChange={dialogResponse}
-          maxAllowedCount={maxAllowedCount}
-          subtext={subtitle}
-        />
-      );
-    }
-
     // If the limit is not exceeded and there are multiple tear sheets (Recruiter)
     else if (data.length > 1) {
-      let subtitle = `This is a recuiter with more than 1 data and ${totalCandidatesCount} candidates.`;
+      let subtitle = `This is a recuiter with more than 1 data and ${totalCount} candidates.`;
 
       dialogComponent = (
         <DialogChoiceComponent
@@ -179,22 +130,9 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       );
     }
 
-    // If the limit is not exceeded and there is only one tear sheet (Recruiter)
-    else if (data.length == 1 && totalCandidatesCount < maxAllowedCount) {
-      let subtitle = `This is a recruiter with 1 data and ${totalCandidatesCount} candidates.`;
-
-      dialogComponent = (
-        <DialogThreeButtonComponent
-          value={totalCandidatesCount}
-          onValueChange={dialogThreeButtonResponse}
-          subtext={subtitle}
-        />
-      );
-    }
-
     // If there is only one tear sheet and the total number of candidates is greater than or equal to the maximum allowed count (Manager)
-    else if (data.length == 1 && totalCandidatesCount >= maxAllowedCount) {
-      let subtitle = `This is a recruiter with 1 data and ${totalCandidatesCount} candidates. Would you like to create a new one?`;
+    else if (data.length == 1 && totalCount >= maxAllowedCount) {
+      let subtitle = `This is a recruiter with 1 data and ${totalCount} candidates. Would you like to create a new one?`;
 
       dialogComponent = (
         <DialogComponent
@@ -205,12 +143,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       );
     }
   }
-  return (
-    <>
-      {dialogComponent}
-      {/* <MessageBarComponent/> */}
-    </>
-  );
+  return <>{dialogComponent}</>;
 
   function handleDialogResponse() {
     const dialogChoiceResponse = (data: DialogProps) => {

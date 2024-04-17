@@ -34,9 +34,8 @@ export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
   // If CandidateCount is 0, then disable the option
   const options: IChoiceGroupOption[] = props.choices.map((option) => ({
     key: option.Id,
-    text: option.Name + " (" + option.CandidateCount + ")",
-    disabled:
-      option?.CandidateCount?.toString() === props.maxAllowed?.toString(),
+    text: option.Name + " (" + option.Count + ")",
+    disabled: option?.Count?.toString() === props.maxAllowed?.toString(),
   }));
 
   const [selectedOption, setSelectedOption] = React.useState<any>(() => {

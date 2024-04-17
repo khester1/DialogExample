@@ -1,7 +1,7 @@
 const mockServiceData = {
   Data: [
-    { Id: '1', Name: 'Example 1', CandidateCount: '5' },
-    { Id: '2', Name: 'Example 2', CandidateCount: '4' }
+    { Id: '1', Name: 'Example 1', Count: '5' },
+    { Id: '2', Name: 'Example 2', Count: '4' }
   ],
   ExceedLimit: false,
   ISManager: false,
