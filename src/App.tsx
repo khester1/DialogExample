@@ -144,8 +144,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
       dialogComponent = (
         <DialogChoiceThreeButtonComponent
-          tearSheets={tearSheets as TearSheet[]}
-          onTearSheetSelect={dialogChoiceThreeButtonResponse}
+          options={tearSheets as TearSheet[]}
+          onSelect={dialogChoiceThreeButtonResponse}
           subtext={subtitle}
         />
       );

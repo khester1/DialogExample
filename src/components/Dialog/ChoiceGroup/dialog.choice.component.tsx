@@ -6,12 +6,7 @@ import {
   IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
 import { useBoolean } from "@fluentui/react-hooks";
-
-interface DialogChoiceProps {
-  Id: string;
-  Name: string;
-  CandidateCount: string;
-}
+import { DialogProps } from "../dialog.base.interface";
 
 const modelProps = {
   isBlocking: false,
@@ -20,20 +15,20 @@ const modelProps = {
   styles: { main: { maxWidth: 550 } },
 };
 
-type ChildComponentProps = {
-  choices: DialogChoiceProps[];
-  onSelect: (choice: DialogChoiceProps) => void;
+type DialogChoiceProps = {
+  choices: DialogProps[];
+  onSelect: (choice: DialogProps) => void;
   subtext?: string;
   maxAllowed?: number;
 };
 
-export const DialogChoiceComponent: React.FC<ChildComponentProps> = ({
+export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
   ...props
 }) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: "Choice Component",
+    title: "Two Choice Options",
     subText: props.subtext,
   };
   // If CandidateCount is 0, then disable the option
@@ -51,12 +46,12 @@ export const DialogChoiceComponent: React.FC<ChildComponentProps> = ({
 
   const handleSave = () => {
     toggleHideDialog();
-    const selectedTearSheet = props.choices.find(
-      (tearSheet) => tearSheet.Id === selectedOption
+    const getSelectedOption = props.choices.find(
+      (option) => option.Id === selectedOption
     );
 
-    if (selectedTearSheet) {
-      props.onSelect(selectedTearSheet);
+    if (getSelectedOption) {
+      props.onSelect(getSelectedOption);
     }
   };
 
