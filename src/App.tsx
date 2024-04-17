@@ -198,8 +198,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
       dialogComponent = (
         <DialogChoiceComponent
-          tearSheets={tearSheets as TearSheet[]}
-          onTearSheetSelect={dialogChoiceResponse}
+          choices={tearSheets as TearSheet[]}
+          onSelect={dialogChoiceResponse}
           maxAllowed={maxAllowedCount}
           subtext={subtitle}
         />

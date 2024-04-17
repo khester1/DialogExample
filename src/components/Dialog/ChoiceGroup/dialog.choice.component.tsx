@@ -7,7 +7,7 @@ import {
 } from "@fluentui/react/lib/ChoiceGroup";
 import { useBoolean } from "@fluentui/react-hooks";
 
-interface TearSheet {
+interface DialogChoiceProps {
   Id: string;
   Name: string;
   CandidateCount: string;
@@ -21,8 +21,8 @@ const modelProps = {
 };
 
 type ChildComponentProps = {
-  tearSheets: TearSheet[];
-  onTearSheetSelect: (tearSheet: TearSheet) => void;
+  choices: DialogChoiceProps[];
+  onSelect: (choice: DialogChoiceProps) => void;
   subtext?: string;
   maxAllowed?: number;
 };
@@ -33,15 +33,15 @@ export const DialogChoiceComponent: React.FC<ChildComponentProps> = ({
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: "Merge Candidates",
+    title: "Choice Component",
     subText: props.subtext,
   };
   // If CandidateCount is 0, then disable the option
-  const options: IChoiceGroupOption[] = props.tearSheets.map((tearSheet) => ({
-    key: tearSheet.Id,
-    text: tearSheet.Name + " (" + tearSheet.CandidateCount + ")",
+  const options: IChoiceGroupOption[] = props.choices.map((option) => ({
+    key: option.Id,
+    text: option.Name + " (" + option.CandidateCount + ")",
     disabled:
-      tearSheet?.CandidateCount?.toString() === props.maxAllowed?.toString(),
+      option?.CandidateCount?.toString() === props.maxAllowed?.toString(),
   }));
 
   const [selectedOption, setSelectedOption] = React.useState<any>(() => {
@@ -51,12 +51,12 @@ export const DialogChoiceComponent: React.FC<ChildComponentProps> = ({
 
   const handleSave = () => {
     toggleHideDialog();
-    const selectedTearSheet = props.tearSheets.find(
+    const selectedTearSheet = props.choices.find(
       (tearSheet) => tearSheet.Id === selectedOption
     );
 
     if (selectedTearSheet) {
-      props.onTearSheetSelect(selectedTearSheet);
+      props.onSelect(selectedTearSheet);
     }
   };
 
@@ -79,11 +79,11 @@ export const DialogChoiceComponent: React.FC<ChildComponentProps> = ({
       <ChoiceGroup
         defaultSelectedKey={selectedOption}
         options={options}
-        onChange={onChange} // Set the onChange handler here
+        onChange={onChange}
       />
       <DialogFooter>
         <DefaultButton onClick={toggleHideDialog} text="Cancel" />
-        <PrimaryButton onClick={handleSave} text="Merge" />
+        <PrimaryButton onClick={handleSave} text="Select" />
       </DialogFooter>
     </Dialog>
   );
