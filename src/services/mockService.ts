@@ -5,9 +5,9 @@ export const fetchTearSheets = () => {
     setTimeout(() => {
       const mockResponse = {
         ok: true,
-        json: () => Promise.resolve(mockServiceData) // Directly pass the mock data object
+        json: () => Promise.resolve(mockServiceData)
       };
       resolve(mockResponse);
-    }, 1000); // Simulate a network delay
+    }, 1000); 
   });
 };

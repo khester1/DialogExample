@@ -20,19 +20,6 @@ interface TearSheet {
   Name: string;
   CandidateCount: string;
 }
-
-interface CreateTearSheetDetails {
-  EntityName: string | undefined;
-  ListIds: string[] | undefined;
-  Action: string;
-  TearSheetId?: string;
-}
-
-interface TearSheetRequest {
-  RequestType: string;
-  CreateTearSheet: CreateTearSheetDetails;
-}
-
 const DialogExample: React.FC<ICustomDialogProps> = (
   props: ICustomDialogProps
 ) => {
@@ -52,7 +39,6 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   const [maxAllowedCount, setMaxAllowedCount] = useState(0);
   const [maxTearSheetLimit, setMaxLimit] = useState(0);
 
-  debugger;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
