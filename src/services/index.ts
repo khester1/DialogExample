@@ -1,7 +1,7 @@
 // src/services/index.js
-import { fetchTearSheets as fetchReal } from './service';
-import { fetchTearSheets as fetchMock } from './mockService';
+import { fetchData as fetchReal } from './service';
+import { fetchData as fetchMock } from './mockService';
 
 const useMockAPI = process.env.REACT_APP_USE_MOCK_API === 'true';
 
-export const fetchTearSheets = useMockAPI ? fetchMock : fetchReal;
+export const fetchData = useMockAPI ? fetchMock : fetchReal;

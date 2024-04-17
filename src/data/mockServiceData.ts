@@ -1,5 +1,5 @@
 const mockServiceData = {
-  TearSheets: [
+  Data: [
     { Id: '1', Name: 'Example 1', CandidateCount: '5' },
     { Id: '2', Name: 'Example 2', CandidateCount: '4' }
   ],

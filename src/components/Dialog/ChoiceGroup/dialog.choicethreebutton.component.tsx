@@ -6,7 +6,7 @@ import {
   IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
 import { useBoolean } from "@fluentui/react-hooks";
-import { DialogProps } from "../dialog.base.interface";
+import { DialogProps } from "../../../base.interface";
 
 const modelProps = {
   isBlocking: false,

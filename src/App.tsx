@@ -7,7 +7,9 @@ import { DialogThreeButtonComponent } from "./components/Dialog/ThreeButton/dial
 import { ProgressSpinnerComponent } from "./components/Progress/Spinner/progess.spinner.component";
 import { DialogChoiceThreeButtonComponent } from "./components/Dialog/ChoiceGroup/dialog.choicethreebutton.component";
 import { MessageBarComponent } from "./components/MessageBar/messagebar.component";
-import { fetchTearSheets } from "./services";
+
+import { DialogProps } from "./base.interface";
+import { fetchData } from "./services/mockService";
 
 export interface ICustomDialogProps {
   selectedItems: string[] | undefined;
@@ -15,11 +17,6 @@ export interface ICustomDialogProps {
   userId: string | undefined;
 }
 
-interface TearSheet {
-  Id: string;
-  Name: string;
-  CandidateCount: string;
-}
 const DialogExample: React.FC<ICustomDialogProps> = (
   props: ICustomDialogProps
 ) => {
@@ -28,24 +25,14 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   const [userid, setUserid] = useState<string | undefined>(props?.userId);
   const [alertValue, setDialogResponseAlert] = useState<string>("");
   const [confirmValue, setDialogResponseConfirm] = useState<boolean>(false);
-  const [selectedTearSheet, setSelectedTearSheet] = useState<TearSheet | null>(
-    null
-  );
-  const [data, setData] = useState(null);
+  const [initPayload, setInitPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [tearSheets, setTearSheets] = useState([]);
+  const [data, setData] = useState([]);
   const [exceedLimit, setExceedLimit] = useState(false);
   const [isRecruitingManager, setIsManager] = useState(false);
   const [maxAllowedCount, setMaxAllowedCount] = useState(0);
-  const [maxTearSheetLimit, setMaxLimit] = useState(0);
+  const [maxdataLimit, setMaxLimit] = useState(0);
 
-  var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  var raw = JSON.stringify({
-    RequestType: "ValidateTearSheetCreation",
-    UserId: userid,
-  });
   useEffect(() => {
     const requestOptions: RequestInit = {
       method: "POST",
@@ -53,17 +40,17 @@ const DialogExample: React.FC<ICustomDialogProps> = (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        RequestType: "ValidateTearSheetCreation",
+        RequestType: "ExampleRequestType",
         UserId: userid,
       }),
       redirect: "follow",
     };
 
-    fetchTearSheets(requestOptions)
+    fetchData(requestOptions)
       .then((response) => (response as Response).json())
       .then((responseData) => {
-        setData(responseData || []);
-        setTearSheets(responseData?.TearSheets);
+        setInitPayload(responseData || []);
+        setData(responseData?.Data);
         setExceedLimit(responseData?.ExceedLimit);
         setIsManager(responseData?.ISManager);
         setMaxAllowedCount(responseData?.MaxAllowedCount);
@@ -80,21 +67,21 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     return <ProgressSpinnerComponent message="Loading..." />;
   }
 
-  if (!data) {
+  if (!initPayload) {
     setIsLoading(false);
 
     return <div>No data available</div>;
   }
 
   //Get Candidate Count
-  const totalCandidatesCount = countTotalCandidates(tearSheets);
+  const totalCandidatesCount = countTotalCandidates(data);
 
-  function countTotalCandidates(tearSheets: any[]) {
-    if (!tearSheets) {
+  function countTotalCandidates(data: DialogProps[]) {
+    if (!data) {
       return 0;
     }
-    return tearSheets.reduce((total, tearSheet) => {
-      return total + parseInt(tearSheet.CandidateCount, 10);
+    return data.reduce((total, options) => {
+      return total + parseInt(options.CandidateCount, 10);
     }, 0);
   }
 
@@ -125,12 +112,12 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     }
 
     // If there are multiple tear sheets (Manager)
-    else if (tearSheets.length > 1) {
-      let subtitle = `This is a Manager with more than 1 tearsheet and ${totalCandidatesCount} candidates.`;
+    else if (data.length > 1) {
+      let subtitle = `This is a Manager with more than 1 data and ${totalCandidatesCount} candidates.`;
 
       dialogComponent = (
         <DialogChoiceThreeButtonComponent
-          options={tearSheets as TearSheet[]}
+          options={data as DialogProps[]}
           onSelect={dialogChoiceThreeButtonResponse}
           subtext={subtitle}
         />
@@ -138,8 +125,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     }
 
     // If there is only one tear sheet (Manager)
-    else if (tearSheets.length === 1) {
-      let subtitle = `This is a manager with 1 tearsheet and  ${totalCandidatesCount} candidates. 
+    else if (data.length === 1) {
+      let subtitle = `This is a manager with 1 data and  ${totalCandidatesCount} candidates. 
     Would you like to create a new one?`;
 
       dialogComponent = (
@@ -167,7 +154,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
     // If the limit is not exceeded and there are no tear sheets (Recruiter)
     else if (totalCandidatesCount === 0) {
-      let subtitle = `This is a recruiter with no tearsheets and ${ids?.length} candidates.`;
+      let subtitle = `This is a recruiter with no datas and ${ids?.length} candidates.`;
 
       dialogComponent = (
         <DialogComponent
@@ -179,12 +166,12 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     }
 
     // If the limit is not exceeded and there are multiple tear sheets (Recruiter)
-    else if (tearSheets.length > 1) {
-      let subtitle = `This is a recuiter with more than 1 tearsheet and ${totalCandidatesCount} candidates.`;
+    else if (data.length > 1) {
+      let subtitle = `This is a recuiter with more than 1 data and ${totalCandidatesCount} candidates.`;
 
       dialogComponent = (
         <DialogChoiceComponent
-          choices={tearSheets as TearSheet[]}
+          choices={data as DialogProps[]}
           onSelect={dialogChoiceResponse}
           maxAllowed={maxAllowedCount}
           subtext={subtitle}
@@ -193,8 +180,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     }
 
     // If the limit is not exceeded and there is only one tear sheet (Recruiter)
-    else if (tearSheets.length == 1 && totalCandidatesCount < maxAllowedCount) {
-      let subtitle = `This is a recruiter with 1 tearsheet and ${totalCandidatesCount} candidates.`;
+    else if (data.length == 1 && totalCandidatesCount < maxAllowedCount) {
+      let subtitle = `This is a recruiter with 1 data and ${totalCandidatesCount} candidates.`;
 
       dialogComponent = (
         <DialogThreeButtonComponent
@@ -206,11 +193,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     }
 
     // If there is only one tear sheet and the total number of candidates is greater than or equal to the maximum allowed count (Manager)
-    else if (
-      tearSheets.length == 1 &&
-      totalCandidatesCount >= maxAllowedCount
-    ) {
-      let subtitle = `This is a recruiter with 1 tearsheet and ${totalCandidatesCount} candidates. Would you like to create a new one?`;
+    else if (data.length == 1 && totalCandidatesCount >= maxAllowedCount) {
+      let subtitle = `This is a recruiter with 1 data and ${totalCandidatesCount} candidates. Would you like to create a new one?`;
 
       dialogComponent = (
         <DialogComponent
@@ -229,9 +213,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   );
 
   function handleDialogResponse() {
-    const dialogChoiceResponse = (tearSheet: TearSheet) => {
-      setSelectedTearSheet(tearSheet);
-      executeTearSheetAction("Merge", tearSheet.Id);
+    const dialogChoiceResponse = (data: DialogProps) => {
+      executedataAction("Merge", data.Id);
     };
 
     const dialogAlertResponse = (value: string) => {
@@ -241,7 +224,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
     const dialogResponse = (value: boolean) => {
       setDialogResponseConfirm(value);
       if (value) {
-        executeTearSheetAction("New");
+        executedataAction("New");
       } else {
       }
     };
@@ -252,21 +235,21 @@ const DialogExample: React.FC<ICustomDialogProps> = (
           alert("Cancel");
           break;
         case "Merge":
-          executeTearSheetAction("Merge", tearSheets[0]);
+          executedataAction("Merge", data[0]);
           break;
         case "Create":
-          executeTearSheetAction("New");
+          executedataAction("New");
           break;
       }
     };
 
     const dialogChoiceThreeButtonResponse = (value: string) => {
       if (value === "Create") {
-        executeTearSheetAction("New");
+        executedataAction("New");
       } else if (value === "Cancel") {
         alert("Cancel");
       } else {
-        executeTearSheetAction("Merge", value);
+        executedataAction("Merge", value);
       }
     };
     return {
@@ -277,8 +260,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (
       dialogChoiceThreeButtonResponse,
     };
 
-    function executeTearSheetAction(actionType: string, tearSheetId?: string) {
-      alert(`Action: ${actionType} TearSheetId: ${tearSheetId}`);
+    function executedataAction(actionType: string, dataId?: string) {
+      alert(`Action: ${actionType} dataId: ${dataId}`);
     }
   }
 };

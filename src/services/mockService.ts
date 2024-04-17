@@ -1,6 +1,6 @@
 import mockServiceData from "../data/mockServiceData";
 
-export const fetchTearSheets = () => {
+export const fetchData = (requestOptions: RequestInit | undefined) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const mockResponse = {
