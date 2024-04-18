@@ -1,5 +1,3 @@
-
-
 function openDialog(executionContext) {
 
         var data = {

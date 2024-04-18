@@ -8,13 +8,11 @@ import { CustomDialogProps } from "../dialog.base.interface";
 const dialogStyles = { main: { maxWidth: 450 } };
 
 type DialogProps = CustomDialogProps & {
-  maxAllowedCount: number;
   onSelect: (newValue: boolean) => void;
 };
 
 export const DialogComponent: React.FC<DialogProps> = ({
   onSelect: onValueChange,
-  maxAllowedCount: maxDetails,
   subtext,
   ...props
 }) => {

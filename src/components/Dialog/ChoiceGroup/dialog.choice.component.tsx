@@ -48,7 +48,7 @@ export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
     );
 
     if (getSelectedOption) {
-      props.onSelect(getSelectedOption.Id);
+      props.onSelect(getSelectedOption);
     }
   };
 
