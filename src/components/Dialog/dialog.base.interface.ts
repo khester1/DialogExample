@@ -3,8 +3,8 @@ export interface CustomDialogProps {
     title?: string;
     primaryButtonText?: string;
     secondaryButtonText?: string;
-    onSelect: (newValue: string) => void;
+    onSelect: (newValue: any) => void;
   };
 
-  
+
   

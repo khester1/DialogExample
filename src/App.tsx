@@ -93,7 +93,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
     dialogComponent = (
       <DialogComponent
-        onValueChange={dialogResponse}
+        onSelect={dialogResponse}
         maxAllowedCount={maxAllowedCount}
         subtext={subtitle}
       />
