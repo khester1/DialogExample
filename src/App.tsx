@@ -5,7 +5,7 @@ import { DialogChoiceComponent } from "./components/Dialog/ChoiceGroup/dialog.ch
 import { DialogAlertComponent } from "./components/Dialog/Alert/dialog.alert.component";
 import { ProgressSpinnerComponent } from "./components/Progress/Spinner/progess.spinner.component";
 
-import { DialogProps } from "./base.interface";
+import { DataProps } from "./base.interface";
 import { fetchData } from "./services/mockService";
 
 export interface ICustomDialogProps {
@@ -18,8 +18,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   props: ICustomDialogProps
 ) => {
   const [ids, setIds] = useState<string[] | undefined>(props?.selectedItems);
-  const [from, setFrom] = useState<string | undefined>(props?.requestFrom);
-  const [userid, setUserid] = useState<string | undefined>(props?.userId);
+  const [userid] = useState<string | undefined>(props?.userId);
   const [alertValue, setDialogResponseAlert] = useState<string>("");
   const [confirmValue, setDialogResponseConfirm] = useState<boolean>(false);
   const [initPayload, setInitPayload] = useState(null);
@@ -71,9 +70,9 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   }
 
   //Get Candidate Count
-  const totalCount = countTotalCandidates(data);
+  const totalCount = countTotal(data);
 
-  function countTotalCandidates(data: DialogProps[]) {
+  function countTotal(data: DataProps[]) {
     if (!data) {
       return 0;
     }
@@ -90,18 +89,16 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
   //Manager
   if (isRecruitingManager) {
-    // If there are no candidates in any tear sheet (Manager)
-    if (totalCount === 0) {
-      let subtitle = `This is a Manager. Total number of selected candidates: ${ids?.length}.`;
+    let subtitle = `This is a Manager. Total number of selected candidates: ${ids?.length}.`;
 
-      dialogComponent = (
-        <DialogComponent
-          onValueChange={dialogResponse}
-          maxAllowedCount={maxAllowedCount}
-          subtext={subtitle}
-        />
-      );
-    }
+    dialogComponent = (
+      <DialogComponent
+        onValueChange={dialogResponse}
+        maxAllowedCount={maxAllowedCount}
+        subtext={subtitle}
+      />
+    );
+
     //Reruiter
   } else {
     // If the user is not a recruiting  manager and the limit is exceeded (Recruiter)
@@ -110,7 +107,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
       dialogComponent = (
         <DialogAlertComponent
-          onValueChange={dialogAlertResponse}
+          onSelect={dialogAlertResponse}
           subtext={subtitle}
         />
       );
@@ -122,22 +119,9 @@ const DialogExample: React.FC<ICustomDialogProps> = (
 
       dialogComponent = (
         <DialogChoiceComponent
-          choices={data as DialogProps[]}
+          choices={data as DataProps[]}
           onSelect={dialogChoiceResponse}
           maxAllowed={maxAllowedCount}
-          subtext={subtitle}
-        />
-      );
-    }
-
-    // If there is only one tear sheet and the total number of candidates is greater than or equal to the maximum allowed count (Manager)
-    else if (data.length == 1 && totalCount >= maxAllowedCount) {
-      let subtitle = `This is a recruiter with 1 data and ${totalCount} candidates. Would you like to create a new one?`;
-
-      dialogComponent = (
-        <DialogComponent
-          onValueChange={dialogResponse}
-          maxAllowedCount={maxAllowedCount}
           subtext={subtitle}
         />
       );
@@ -146,7 +130,7 @@ const DialogExample: React.FC<ICustomDialogProps> = (
   return <>{dialogComponent}</>;
 
   function handleDialogResponse() {
-    const dialogChoiceResponse = (data: DialogProps) => {
+    const dialogChoiceResponse = (data: DataProps) => {
       executedataAction("Merge", data.Id);
     };
 

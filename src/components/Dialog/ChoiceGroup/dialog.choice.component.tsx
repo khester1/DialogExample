@@ -6,7 +6,8 @@ import {
   IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
 import { useBoolean } from "@fluentui/react-hooks";
-import { DialogProps } from "../../../base.interface";
+import { DataProps } from "../../../base.interface";
+import { CustomDialogProps } from "../dialog.base.interface";
 
 const modelProps = {
   isBlocking: false,
@@ -15,10 +16,8 @@ const modelProps = {
   styles: { main: { maxWidth: 550 } },
 };
 
-type DialogChoiceProps = {
-  choices: DialogProps[];
-  onSelect: (choice: DialogProps) => void;
-  subtext?: string;
+type DialogChoiceProps = CustomDialogProps & {
+  choices: DataProps[];
   maxAllowed?: number;
 };
 
@@ -28,14 +27,13 @@ export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: "Two Choice Options",
-    subText: props.subtext,
+    title: props.title || "Select an option",
+    subText: props.subtext || "Select an option from the list below",
   };
-  // If CandidateCount is 0, then disable the option
+
   const options: IChoiceGroupOption[] = props.choices.map((option) => ({
     key: option.Id,
     text: option.Name + " (" + option.Count + ")",
-    disabled: option?.Count?.toString() === props.maxAllowed?.toString(),
   }));
 
   const [selectedOption, setSelectedOption] = React.useState<any>(() => {
@@ -50,7 +48,7 @@ export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
     );
 
     if (getSelectedOption) {
-      props.onSelect(getSelectedOption);
+      props.onSelect(getSelectedOption.Id);
     }
   };
 
@@ -76,8 +74,14 @@ export const DialogChoiceComponent: React.FC<DialogChoiceProps> = ({
         onChange={onChange}
       />
       <DialogFooter>
-        <DefaultButton onClick={toggleHideDialog} text="Cancel" />
-        <PrimaryButton onClick={handleSave} text="Select" />
+        <DefaultButton
+          onClick={toggleHideDialog}
+          text={props.secondaryButtonText || "Cancel"}
+        />
+        <PrimaryButton
+          onClick={handleSave}
+          text={props.primaryButtonText || "Select"}
+        />
       </DialogFooter>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-export interface DialogProps {
+export interface DataProps {
   Id: string;
   Name: string;
   Count: string;

@@ -3,19 +3,20 @@ import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
 import { useId, useBoolean } from "@fluentui/react-hooks";
 import styles from "./dialog.module.css";
+import { CustomDialogProps } from "../dialog.base.interface";
 
 const dialogStyles = { main: { maxWidth: 450 } };
 
-type ChildComponentProps = {
+type DialogProps = CustomDialogProps & {
   maxAllowedCount: number;
-  onValueChange: (newValue: boolean) => void;
-  subtext?: string;
+  onSelect: (newValue: boolean) => void;
 };
 
-export const DialogComponent: React.FC<ChildComponentProps> = ({
-  onValueChange,
+export const DialogComponent: React.FC<DialogProps> = ({
+  onSelect: onValueChange,
   maxAllowedCount: maxDetails,
   subtext,
+  ...props
 }) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const labelId: string = useId("dialogLabel");
@@ -23,8 +24,7 @@ export const DialogComponent: React.FC<ChildComponentProps> = ({
 
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: "Create New Tear Sheet",
-    closeButtonAriaLabel: "Close",
+    title: props.title || "Dialog",
     subText: subtext,
   };
 
@@ -61,8 +61,14 @@ export const DialogComponent: React.FC<ChildComponentProps> = ({
         modalProps={modalProps}
       >
         <DialogFooter>
-          <DefaultButton onClick={cancel} text="Cancel" />
-          <PrimaryButton onClick={confirm} text="Yes" />
+          <DefaultButton
+            onClick={cancel}
+            text={props.secondaryButtonText || "Cancel"}
+          />
+          <PrimaryButton
+            onClick={confirm}
+            text={props.primaryButtonText || "Confirm"}
+          />
         </DialogFooter>
       </Dialog>
     </>

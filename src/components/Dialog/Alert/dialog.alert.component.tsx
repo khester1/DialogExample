@@ -6,21 +6,8 @@ import {
   PrimaryButton,
   ContextualMenu,
 } from "@fluentui/react";
-import styles from "./dialog.module.css";
-
-// Constants
-const dialogStyles = { main: { maxWidth: 450 } };
-const dragOptions = {
-  moveMenuItemText: "Move",
-  closeMenuItemText: "Close",
-  menu: ContextualMenu,
-  keepInBounds: true,
-};
-
-type ChildComponentProps = {
-  subtext?: string;
-  onValueChange: (newValue: string) => void;
-};
+import styles from "./dialog.alert.module.css";
+import { CustomDialogProps } from "../dialog.base.interface";
 
 // Custom hook for managing boolean states
 function useBoolean(
@@ -49,17 +36,26 @@ const useModalProps = (
       titleAriaId: labelId,
       subtitleAriaId: subTextId,
       isBlocking: false,
-      styles: dialogStyles,
+      styles: { main: styles.dialogMain },
       isModeless: true,
       isDarkOverlay: false,
-      dragOptions: isDraggable ? dragOptions : undefined,
+      dragOptions: isDraggable
+        ? {
+            moveMenuItemText: "Move",
+            closeMenuItemText: "Close",
+            menu: ContextualMenu,
+            keepInBounds: true,
+          }
+        : undefined,
     }),
     [isDraggable, labelId, subTextId]
   );
 
-export const DialogAlertComponent: React.FC<ChildComponentProps> = ({
-  onValueChange,
+export const DialogAlertComponent: React.FC<CustomDialogProps> = ({
+  onSelect: onValueChange,
   subtext,
+  title,
+  primaryButtonText: buttonText,
 }) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
   const [isDraggable, { toggle: toggleIsDraggable }] = useBoolean(false);
@@ -68,8 +64,7 @@ export const DialogAlertComponent: React.FC<ChildComponentProps> = ({
 
   const dialogContentProps = {
     type: DialogType.largeHeader,
-    title: "Alert Option",
-    closeButtonAriaLabel: "Close",
+    title: title || "Alert",
     subText: subtext,
   };
 
@@ -88,7 +83,7 @@ export const DialogAlertComponent: React.FC<ChildComponentProps> = ({
       modalProps={modalProps}
     >
       <DialogFooter>
-        <PrimaryButton onClick={updateValue} text="Ok" />
+        <PrimaryButton onClick={updateValue} text={buttonText || "Ok"} />
       </DialogFooter>
     </Dialog>
   );

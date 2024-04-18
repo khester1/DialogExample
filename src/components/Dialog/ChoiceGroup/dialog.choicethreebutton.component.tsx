@@ -6,7 +6,7 @@ import {
   IChoiceGroupOption,
 } from "@fluentui/react/lib/ChoiceGroup";
 import { useBoolean } from "@fluentui/react-hooks";
-import { DialogProps } from "../../../base.interface";
+import { DataProps } from "../../../base.interface";
 
 const modelProps = {
   isBlocking: false,
@@ -16,7 +16,7 @@ const modelProps = {
 };
 
 type ChildComponentProps = {
-  options: DialogProps[];
+  options: DataProps[];
   onSelect: (newValue: string) => void;
   subtext?: string;
 };
