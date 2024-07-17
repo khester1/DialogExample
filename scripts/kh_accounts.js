@@ -15,38 +15,39 @@ if (typeof (Xrm.Scripts.Account) == "undefined") {
     };
 }
 
-Xrm.Scripts.Account.Ribbon = {
-    OpenDialog: function (executionContext) {
-        var data = {
-            text: "test",
-            date: new Date(),
-        };
+Xrm.Scripts.Account = {
+    Ribbon: {
+        OpenExampleDialog: function (executionContext) {
+            let data = {
+                text: "test",
+                date: new Date(),
+            };
 
-        var dialogParameters = {
-            pageType: "webresource",
-            webresourceName: "kh_/DialogExample/index.html",
-            data: JSON.stringify(data)
-        };
-        
-        var navigationOptions = {
-            target: 2, 
-            width: 400,
-            height: 410,
-            position: 1,
-            title: "Example Dialog",
-        };
+            let dialogParameters = {
+                pageType: "webresource",
+                webresourceName: "kh_/DialogExample/index.html",
+                data: JSON.stringify(data)
+            };
+            
+            let navigationOptions = {
+                target: 2, 
+                width: 400,
+                height: 410,
+                position: 1,
+                title: "Example Dialog",
+            };
 
-        Xrm.Navigation.navigateTo(dialogParameters, navigationOptions).then(
-            function (returnValue) {
-                console.log(returnValue);
-                // Add your processing logic here
-            },
-            function (e) {
-                Xrm.Navigation.openErrorDialog(e);
-            }
-        ); 
+            Xrm.Navigation.navigateTo(dialogParameters, navigationOptions).then(
+                function (returnValue) {
+                    console.log(returnValue);
+                    // Add your processing logic here
+                },
+                function (e) {
+                    Xrm.Navigation.openErrorDialog(e);
+                }
+            ); 
+        }
     }
 };
 
 
-//Xrm.Scripts.Account.Ribbon.OpenDialog(executionContext);
