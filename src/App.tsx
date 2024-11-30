@@ -1,121 +1,97 @@
-import React, { useEffect, useState, useCallback } from "react";
-import "./App.css";
-import { DialogComponent } from "./components/Dialog/Default/dialog.component";
-import { DialogChoiceComponent } from "./components/Dialog/ChoiceGroup/dialog.choice.component";
-import { DialogAlertComponent } from "./components/Dialog/Alert/dialog.alert.component";
-import { ProgressSpinnerComponent } from "./components/Progress/Spinner/progess.spinner.component";
-import { DataProps } from "./base.interface";
-import { fetchData } from "./services/mockService";
+import React, { useState } from "react";
+import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { MessageBar, MessageBarType } from "@fluentui/react";
+import { useBoolean } from "@fluentui/react-hooks";
+import { DialogFooter } from "@fluentui/react";
+import { DialogComponent } from "./components/dialog/default/dialog.component";
+import ReasonFormComponent from "./components/section/section.creditreleasereason";
+import { IComboBoxOption } from "@fluentui/react";
+import { Service, OrderUpdate } from "./components/services/service"; // Import Service and OrderUpdate
 
 export interface ICustomDialogProps {
   selectedItems: string[] | undefined;
   userId: string | undefined;
+  Xrm: any; // Add Xrm to the props
 }
 
-const DialogExample: React.FC<ICustomDialogProps> = (props) => {
-  const [userid] = useState<string | undefined>(props?.userId);
-  const [initPayload, setInitPayload] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [dialogChoice, setDialogChoice] = useState<string | undefined>(
-    undefined
+// Hardcoded options
+const options: IComboBoxOption[] = [
+  { key: "272280000", text: "Approved Funds" },
+  { key: "272280001", text: "Automatic Release" },
+  { key: "272280002", text: "Approved CAD Account" },
+  { key: "272280003", text: "Approved Check On The Way" },
+  { key: "272280004", text: "Approved Funds In Hand But Not Applied" },
+  { key: "272280005", text: "Approved Per The GM" },
+  { key: "272280006", text: "Approved Internal Application Issues" },
+  { key: "272280007", text: "Approved Logistics Issues" },
+  { key: "272280008", text: "Approved Per Senior Management" },
+  { key: "272280009", text: "Approved Load # Released, Truck Waiting" },
+  { key: "272280010", text: "Approved Replacement Load" },
+  { key: "272280011", text: "Approved Rejected/Returned Load" },
+  { key: "272280012", text: "Approved Load Already Shipped Prior To..." },
+  { key: "272280013", text: "Approved Per Trader" },
+];
+
+const App: React.FC<ICustomDialogProps> = ({ userId, selectedItems, Xrm }) => {
+  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
+  const [formValue, setFormValue] = useState<string>(""); // Selected value
+  const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>(
+    selectedItems || []
   );
 
-  debugger;
+  // Instantiate the Service class with the Xrm object
+  const service = new Service(Xrm);
 
-  useEffect(() => {
-    const requestOptions: RequestInit = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        RequestType: "ExampleRequestType",
-        UserId: userid,
-      }),
-      redirect: "follow",
-    };
+  const handleSubmit = async (confirmed: boolean) => {
+    if (confirmed && formValue && userId) {
+      try {
+        // Prepare the order updates
+        const updates: OrderUpdate[] = selectedOrderIds.map((orderId) => ({
+          stn_orderid: orderId,
+          stn_creditreleasedby: userId, // Pass userId directly
+          stn_creditreleaseddate: new Date().toISOString(),
+          stn_creditreleasereason: parseInt(formValue),
+          statuscode: 924450003,
+        }));
 
-    fetchData(requestOptions)
-      .then((response) => (response as Response).json())
-      .then((responseData) => {
-        setInitPayload(responseData || []);
-        setData(responseData?.Data);
-        setDialogChoice(responseData?.DialogComponentChoice);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Fetching data failed: ", error);
-        setIsLoading(false);
-      });
-  }, [userid]);
+        // Use the Service class to update orders
+        await service.updateOrders(updates);
 
-  const executedataAction = useCallback((data?: DataProps) => {
-    console.log(`Id: ${data?.Id} Name: ${data?.Name} Count: ${data?.Count}`);
-  }, []);
-
-  const dialogChoiceResponse = useCallback(
-    (data: DataProps) => {
-      executedataAction(data);
-    },
-    [executedataAction]
-  );
-
-  const dialogAlertResponse = useCallback((value: string) => {
-    console.log("Alert Response: ", value);
-  }, []);
-
-  const dialogResponse = useCallback(
-    (value: boolean) => {
-      if (value) {
-        console.log("Confirm Response: ", value);
+        // Hide the dialog on success
+        toggleHideDialog();
+      } catch (error) {
+        console.error("Failed to update orders:", error);
       }
-    },
-    [executedataAction]
+    }
+  };
+
+  return (
+    <div>
+      <DialogComponent
+        title="Credit Release Reason"
+        subtext="Select a reason for why the hold is getting released"
+        onValueChange={handleSubmit}
+        hidden={hideDialog}
+        toggleHideDialog={toggleHideDialog}
+        options={
+          <div>
+            <ReasonFormComponent
+              options={options}
+              onValueChange={(id) => setFormValue(id)}
+            />
+            <DialogFooter>
+              <DefaultButton onClick={toggleHideDialog} text="Cancel" />
+              <PrimaryButton
+                onClick={() => handleSubmit(true)}
+                text="Submit"
+                disabled={!formValue}
+              />
+            </DialogFooter>
+          </div>
+        }
+      />
+    </div>
   );
-
-  if (isLoading) {
-    return <ProgressSpinnerComponent message="Loading..." />;
-  }
-
-  if (!initPayload) {
-    setIsLoading(false);
-    return <div>No data available</div>;
-  }
-
-  let dialogComponent = null;
-
-  switch (dialogChoice) {
-    case "Confirm":
-      dialogComponent = (
-        <DialogComponent
-          onSelect={dialogResponse}
-          subtext="This is a Default Dialog."
-        />
-      );
-      break;
-    case "ChoiceGroup":
-      dialogComponent = (
-        <DialogChoiceComponent
-          choices={data as DataProps[]}
-          onSelect={dialogChoiceResponse}
-          subtext="This is a Choice Dialog."
-        />
-      );
-      break;
-    case "Alert":
-      dialogComponent = (
-        <DialogAlertComponent
-          onSelect={dialogAlertResponse}
-          subtext="This is an Alert Dialog."
-        />
-      );
-      break;
-    default:
-      break;
-  }
-
-  return <>{dialogComponent}</>;
 };
 
-export default DialogExample;
+export default App;
