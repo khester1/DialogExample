@@ -21,6 +21,8 @@ const DialogExample: React.FC<ICustomDialogProps> = (props) => {
     undefined
   );
 
+  debugger;
+
   useEffect(() => {
     const requestOptions: RequestInit = {
       method: "POST",
