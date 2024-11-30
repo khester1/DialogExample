@@ -6,7 +6,7 @@ import { DialogFooter } from "@fluentui/react";
 import { DialogComponent } from "./components/dialog/default/dialog.component";
 import ReasonFormComponent from "./components/section/section.creditreleasereason";
 import { IComboBoxOption } from "@fluentui/react";
-import { Service, OrderUpdate } from "./components/services/service"; // Import Service and OrderUpdate
+import { Service, OrderUpdate } from "./components/services/service";
 
 export interface ICustomDialogProps {
   selectedItems: string[] | undefined;
@@ -38,6 +38,8 @@ const App: React.FC<ICustomDialogProps> = ({ userId, selectedItems, Xrm }) => {
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>(
     selectedItems || []
   );
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Success message
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Error message
 
   // Instantiate the Service class with the Xrm object
   const service = new Service(Xrm);
@@ -45,6 +47,10 @@ const App: React.FC<ICustomDialogProps> = ({ userId, selectedItems, Xrm }) => {
   const handleSubmit = async (confirmed: boolean) => {
     if (confirmed && formValue && userId) {
       try {
+        // Clear previous messages
+        setSuccessMessage(null);
+        setErrorMessage(null);
+
         // Prepare the order updates
         const updates: OrderUpdate[] = selectedOrderIds.map((orderId) => ({
           stn_orderid: orderId,
@@ -57,16 +63,48 @@ const App: React.FC<ICustomDialogProps> = ({ userId, selectedItems, Xrm }) => {
         // Use the Service class to update orders
         await service.updateOrders(updates);
 
+        // Display success message
+        setSuccessMessage("Orders updated successfully!");
+
         // Hide the dialog on success
         toggleHideDialog();
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to update orders:", error);
+
+        // Display error message
+        setErrorMessage(
+          error.message || "An error occurred while updating orders."
+        );
       }
     }
   };
 
   return (
     <div>
+      {/* Success Notification */}
+      {successMessage && (
+        <MessageBar
+          messageBarType={MessageBarType.success}
+          isMultiline={false}
+          onDismiss={() => setSuccessMessage(null)}
+          dismissButtonAriaLabel="Close"
+        >
+          {successMessage}
+        </MessageBar>
+      )}
+
+      {/* Error Notification */}
+      {errorMessage && (
+        <MessageBar
+          messageBarType={MessageBarType.error}
+          isMultiline={true}
+          onDismiss={() => setErrorMessage(null)}
+          dismissButtonAriaLabel="Close"
+        >
+          {errorMessage}
+        </MessageBar>
+      )}
+
       <DialogComponent
         title="Credit Release Reason"
         subtext="Select a reason for why the hold is getting released"
