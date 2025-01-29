@@ -24,14 +24,35 @@ export interface ICustomDialogProps {
 }
 
 const App: React.FC<ICustomDialogProps> = ({}) => {
+  const [activeDialog, setActiveDialog] = useState<string>("workflowSelector");
+
+  const handleDialogClose = () => {
+    setActiveDialog(""); // Close all dialogs
+  };
+
+  const navigateToContract = () => {
+    setActiveDialog("contractGrid"); // Switch to Contract Grid dialog
+  };
+
   return (
     <>
-      {/* <DialogWorkflowSelector /> */}
+      {activeDialog === "workflowSelector" && (
+        <DialogWorkflowSelector
+          isOpen={true}
+          onClose={handleDialogClose}
+          onNavigateToContract={navigateToContract}
+        />
+      )}
+
+      {activeDialog === "contractGrid" && (
+        <DialogWorkflowContractGrid isOpen={true} onClose={handleDialogClose} />
+      )}
+
       {/* <DialogWorkflowContractGrid /> */}
       {/* <DialogWorkflowInventorySelector /> */}
       {/* <DialogWorkflowSupplierGrid /> */}
       {/* <DialogWorkflowDispatchSelector /> */}
-      <DialogWorkflowOrderGrid />
+      {/* <DialogWorkflowOrderGrid /> */}
     </>
   );
 };

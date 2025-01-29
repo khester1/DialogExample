@@ -1,7 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
-import { useBoolean } from "@fluentui/react-hooks";
-
 import { DialogFooter } from "@fluentui/react";
 import { DetailsListWorkflowComponent } from "../../detailslist/detaillist.workflow.component";
 import CommandBarWorkflowComponent from "../../commandbar/commandbar.workflow";
@@ -9,6 +7,11 @@ import { LabelWorkflowComponent } from "../../field/label.workflow.component";
 import SectionWorkflowComponent from "../../section/section.workflow.component";
 import FormWorkflowComponent from "../../form/form.workflow.component";
 import { DialogWorkflowComponent } from "../default/dialog.workflowselector";
+
+interface DialogWorkflowContractGridProps {
+  isOpen: boolean; // Controls whether the dialog is visible
+  onClose: () => void; // Callback for closing the dialog
+}
 
 const exampleItems = [
   {
@@ -37,9 +40,11 @@ const exampleItems = [
   },
 ];
 
-const DialogWorkflowContractGrid: React.FC = () => {
-  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(false);
-  const [formValue, setFormValue] = React.useState("");
+const DialogWorkflowContractGrid: React.FC<DialogWorkflowContractGridProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const [formValue, setFormValue] = useState("");
   const [notification, setNotification] = useState<React.ReactNode | null>(
     null
   );
@@ -50,71 +55,62 @@ const DialogWorkflowContractGrid: React.FC = () => {
   };
 
   return (
-    <>
-      <PrimaryButton text="Open Dialog" onClick={toggleHideDialog} />
-      <DialogWorkflowComponent
-        title="Find Contracts for Order Request"
-        subtext=""
-        onValueChange={handleValueChange}
-        hidden={hideDialog}
-        toggleHideDialog={toggleHideDialog}
-        minWidth="1200px"
-        options={
-          <div>
-            <FormWorkflowComponent>
-              <SectionWorkflowComponent
-                columnSpan={12}
-                columnStart={1}
-                rowPosition={1}
-                notification={notification}
+    <DialogWorkflowComponent
+      title="Find Contracts for Order Request"
+      subtext=""
+      onValueChange={handleValueChange}
+      hidden={!isOpen}
+      toggleHideDialog={onClose}
+      minWidth="1200px"
+      options={
+        <div>
+          <FormWorkflowComponent>
+            <SectionWorkflowComponent
+              columnSpan={12}
+              columnStart={1}
+              rowPosition={1}
+              notification={notification}
+            >
+              {/* Add a wrapper div with border styles */}
+              <div
+                style={{
+                  gridColumn: "1 / span 12",
+                  gridRow: "2",
+                  border: "1px solid #EDEBE9",
+                  padding: "8px", // Adjust padding to align content properly
+                  margin: "8px 0", // Spacing around the section
+                }}
               >
-                {/* Add a wrapper div with border styles */}
+                {/* Label aligned with the border */}
                 <div
                   style={{
-                    gridColumn: "1 / span 12",
-                    gridRow: "2",
-                    border: "1px solid #EDEBE9",
-                    padding: "8px", // Adjust padding to align content properly
-                    margin: "8px 0", // Spacing around the section
+                    marginBottom: "8px",
+                    paddingLeft: "8px", // Align text with the border
+                    fontWeight: "bold", // Optional: Make the label bold
                   }}
                 >
-                  {/* Label aligned with the border */}
-                  <div
-                    style={{
-                      marginBottom: "8px",
-                      paddingLeft: "8px", // Align text with the border
-                      fontWeight: "bold", // Optional: Make the label bold
-                    }}
-                  >
-                    <LabelWorkflowComponent
-                      text="Contract Lines"
-                      isBoldHeader
-                    />
-                  </div>
-                  <div style={{ gridColumn: "1 / span 12", gridRow: "3" }}>
-                    <CommandBarWorkflowComponent reverse />
-                  </div>
-                  <div style={{ gridColumn: "1 / span 12", gridRow: "4" }}>
-                    <DetailsListWorkflowComponent items={exampleItems} />
-                  </div>
+                  <LabelWorkflowComponent text="Contract Lines" isBoldHeader />
                 </div>
-              </SectionWorkflowComponent>
-            </FormWorkflowComponent>
-            <DialogFooter>
-              <PrimaryButton
-                onClick={() => handleValueChange(true)}
-                text="Apply to Orders"
-              />
-              <DefaultButton onClick={toggleHideDialog} text="Next" />
-              <DefaultButton
-                onClick={toggleHideDialog}
-                text="Cancel Workflow"
-              />
-            </DialogFooter>
-          </div>
-        }
-      />
-    </>
+                <div style={{ gridColumn: "1 / span 12", gridRow: "3" }}>
+                  <CommandBarWorkflowComponent reverse />
+                </div>
+                <div style={{ gridColumn: "1 / span 12", gridRow: "4" }}>
+                  <DetailsListWorkflowComponent items={exampleItems} />
+                </div>
+              </div>
+            </SectionWorkflowComponent>
+          </FormWorkflowComponent>
+          <DialogFooter>
+            <PrimaryButton
+              onClick={() => handleValueChange(true)}
+              text="Apply to Orders"
+            />
+            <DefaultButton onClick={onClose} text="Next" />
+            <DefaultButton onClick={onClose} text="Cancel Workflow" />
+          </DialogFooter>
+        </div>
+      }
+    />
   );
 };
 
