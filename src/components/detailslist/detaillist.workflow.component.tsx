@@ -5,12 +5,11 @@ import {
   IColumn,
   Selection,
   SelectionMode,
-  IObjectWithKey,
 } from "@fluentui/react/lib/DetailsList";
 
 interface DetailsListComponentProps {
   items?: IDetailsListCompactItems[];
-  selection?: Selection;
+  onSelectionChange?: (selectedItem: IDetailsListCompactItems | null) => void;
 }
 
 export interface IDetailsListCompactItems {
@@ -28,7 +27,7 @@ export interface IDetailsListCompactItems {
 
 const DetailsListWorkflowComponent: React.FC<DetailsListComponentProps> = ({
   items = [],
-  selection,
+  onSelectionChange,
 }) => {
   const [sortedItems, setSortedItems] =
     useState<IDetailsListCompactItems[]>(items);
@@ -36,6 +35,18 @@ const DetailsListWorkflowComponent: React.FC<DetailsListComponentProps> = ({
     field: string;
     direction: boolean;
   }>({ field: "", direction: false });
+
+  // Initialize the Selection object
+  const selection = new Selection({
+    onSelectionChanged: () => {
+      const selectedItems = selection.getSelection();
+      if (onSelectionChange && selectedItems.length > 0) {
+        onSelectionChange(selectedItems[0] as IDetailsListCompactItems);
+      } else if (onSelectionChange) {
+        onSelectionChange(null);
+      }
+    },
+  });
 
   const onColumnClick = (
     ev: React.MouseEvent<HTMLElement>,
@@ -61,6 +72,7 @@ const DetailsListWorkflowComponent: React.FC<DetailsListComponentProps> = ({
     setSortedItems(newItems);
     setCurrentSort({ field: column.fieldName || "", direction: newDirection });
   };
+
   function formatDate(dateString: string | number | Date) {
     if (!dateString) return "";
     const options: Intl.DateTimeFormatOptions = {
@@ -161,7 +173,7 @@ const DetailsListWorkflowComponent: React.FC<DetailsListComponentProps> = ({
       onColumnClick: onColumnClick,
     },
     {
-      key: "column8", // Ensure unique key
+      key: "column8",
       name: "Pct. Remaining",
       fieldName: "percentremaining",
       minWidth: 100,
