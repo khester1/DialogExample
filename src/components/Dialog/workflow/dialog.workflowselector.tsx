@@ -9,13 +9,13 @@ import FormWorkflowComponent from "../../form/form.workflow.component";
 interface DialogWorkflowSelectorProps {
   isOpen: boolean; // Controls whether the dialog is visible
   onClose: () => void; // Callback for closing the dialog
-  onNavigateToContract: () => void; // Callback to navigate to DialogWorkflowContractGrid
+  onWorkflowSelect: (workflow: string) => void; // Callback for workflow selection
 }
 
 const DialogWorkflowSelector: React.FC<DialogWorkflowSelectorProps> = ({
   isOpen,
   onClose,
-  onNavigateToContract,
+  onWorkflowSelect,
 }) => {
   const [isContractSelected, setIsContractSelected] = useState(false);
   const [isInventorySelected, setIsInventorySelected] = useState(false);
@@ -66,25 +66,16 @@ const DialogWorkflowSelector: React.FC<DialogWorkflowSelectorProps> = ({
 
   const handleNextClick = () => {
     if (isContractSelected) {
-      onNavigateToContract(); // Navigate to DialogWorkflowContractGrid
+      onWorkflowSelect("contract"); // Notify parent that Contract is selected
+    } else if (isInventorySelected) {
+      onWorkflowSelect("inventory"); // Notify parent that Inventory is selected
+    } else if (isTransportationSelected) {
+      onWorkflowSelect("transportation"); // Notify parent that Transportation is selected
     } else {
-      // Show a notification if no valid selection is made
-      const errorMessages = (
-        <>
-          <li>Field A is required.</li>
-          <li>Field B must be a valid value.</li>
-          <li>Field C cannot exceed 100 characters.</li>
-        </>
-      );
       setNotification(
         <MessageBarWorkflowComponent
-          messageBarType={MessageBarType.error}
-          subtext={
-            <div style={{ textAlign: "left" }}>
-              Validation failed:
-              <ul>{errorMessages}</ul>
-            </div>
-          }
+          messageBarType={MessageBarType.warning}
+          subtext="Please select at least one workflow option to proceed."
           showDismissButton={true}
           onDismiss={() => setNotification(null)}
         />

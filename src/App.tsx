@@ -25,13 +25,21 @@ export interface ICustomDialogProps {
 
 const App: React.FC<ICustomDialogProps> = ({}) => {
   const [activeDialog, setActiveDialog] = useState<string>("workflowSelector");
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null);
 
   const handleDialogClose = () => {
     setActiveDialog(""); // Close all dialogs
   };
 
-  const navigateToContract = () => {
-    setActiveDialog("contractGrid"); // Switch to Contract Grid dialog
+  const handleWorkflowSelection = (workflow: string) => {
+    setSelectedWorkflow(workflow);
+
+    // Navigate to specific dialogs based on the workflow selection
+    if (workflow === "contract") {
+      setActiveDialog("contractGrid");
+    } else {
+      console.log(`Unsupported workflow: ${workflow}`);
+    }
   };
 
   return (
@@ -40,19 +48,13 @@ const App: React.FC<ICustomDialogProps> = ({}) => {
         <DialogWorkflowSelector
           isOpen={true}
           onClose={handleDialogClose}
-          onNavigateToContract={navigateToContract}
+          onWorkflowSelect={handleWorkflowSelection} // Pass the selection handler
         />
       )}
 
       {activeDialog === "contractGrid" && (
         <DialogWorkflowContractGrid isOpen={true} onClose={handleDialogClose} />
       )}
-
-      {/* <DialogWorkflowContractGrid /> */}
-      {/* <DialogWorkflowInventorySelector /> */}
-      {/* <DialogWorkflowSupplierGrid /> */}
-      {/* <DialogWorkflowDispatchSelector /> */}
-      {/* <DialogWorkflowOrderGrid /> */}
     </>
   );
 };
