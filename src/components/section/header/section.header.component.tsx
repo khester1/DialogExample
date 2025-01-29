@@ -2,6 +2,10 @@
 import React from "react";
 import { mergeStyles } from "@fluentui/react";
 import { ICommandBarItemProps, CommandBar } from "@fluentui/react";
+import {
+  ButtonCommandBarComponent,
+  ButtonCommandBarProps,
+} from "../../button/commandbar/button.commandbar.component";
 import { sharedTitleStyles } from "../../styles/commonStyles";
 
 interface SectionHeaderProps {
@@ -10,6 +14,7 @@ interface SectionHeaderProps {
   showCommandBar?: boolean;
   commandBarItems?: ICommandBarItemProps[];
   useCommandBarButton?: boolean;
+  buttonProps?: ButtonCommandBarProps;
 }
 
 // Styles for the main header container
@@ -43,6 +48,7 @@ const SectionHeaderComponent: React.FC<SectionHeaderProps> = ({
   showCommandBar = false,
   commandBarItems = [],
   useCommandBarButton = false,
+  buttonProps,
 }) => {
   // Example: Assuming commandBarItems are divided into primary and overflowItems (those that move to the ellipsis)
   const overflowItems: ICommandBarItemProps[] =
@@ -55,6 +61,11 @@ const SectionHeaderComponent: React.FC<SectionHeaderProps> = ({
         {!useCommandBarButton && text && <span>{text}</span>}
         {statusText && <span className={statusTextClass}>{statusText}</span>}
       </div>
+
+      {/* Render the CommandBar or button if specified */}
+      {useCommandBarButton && buttonProps && (
+        <ButtonCommandBarComponent {...buttonProps} />
+      )}
 
       {showCommandBar && (
         <CommandBar

@@ -23,7 +23,7 @@ const dialogStyles = {
   },
 };
 
-export const DialogComponent: React.FC<DialogProps> = ({
+export const DialogWorkflowComponent: React.FC<DialogProps> = ({
   onValueChange,
   subtext,
   hidden,

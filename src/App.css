@@ -3,3 +3,31 @@
   bottom: 0;
   width: 98%;
 }
+
+/* Create a container that uses Flexbox for layout */
+.app-container {
+  display: flex;
+  height: 100vh; /* Full height of the viewport */
+}
+
+/* Left navigation */
+.nav-container {
+  width: 250px; /* Fixed width for the navigation */
+  background-color: #f4f4f4; /* Light gray background for the nav */
+  padding: 20px; /* Some padding for spacing */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for effect */
+}
+
+/* Right content area */
+.content-container {
+  flex-grow: 1; /* Take up the remaining space */
+  padding: 20px; /* Some padding for spacing */
+  background-color: #fff; /* White background for content */
+  overflow-y: auto; /* Allow vertical scrolling if content is long */
+ 
+  /*border: 2px solid red;*/       /* Temporary border for debugging */
+}
+
+.ms-Dialog-main {
+  max-width: 100% !important;
+}

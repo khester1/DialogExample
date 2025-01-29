@@ -1,0 +1,61 @@
+/* Grid container for a 12-column layout */
+.gridContainer {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  /* background: #faf9f7; */
+  grid-template-columns: repeat(12, 1fr); /* 12 equal-width columns */
+  border-top: 1px solid rgb(237, 235, 233);
+    /* Important: Ensure items don't stretch to match height */
+    align-items: start; /* Align items to the top */
+    grid-auto-rows: auto; /* Rows take only as much space as needed */
+}
+
+/* Grid column spans */
+.span1 {
+  grid-column: span 1;
+}
+
+.span2 {
+  grid-column: span 2;
+}
+
+.span3 {
+  grid-column: span 3;
+}
+
+.span4 {
+  grid-column: span 4;
+}
+
+.span5 {
+  grid-column: span 5;
+}
+
+.span6 {
+  grid-column: span 6;
+}
+
+.span7 {
+  grid-column: span 7;
+}
+
+.span8 {
+  grid-column: span 8;
+}
+
+.span9 {
+  grid-column: span 9;
+}
+
+.span10 {
+  grid-column: span 10;
+}
+
+.span11 {
+  grid-column: span 11;
+}
+
+.span12 {
+  grid-column: span 12;
+}

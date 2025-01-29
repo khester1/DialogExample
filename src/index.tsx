@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App, { ICustomDialogProps } from "./App";
+import AppOriginal from "./AppOriginal";
 
 const Xrm = (window.parent && window.parent.Xrm) || undefined;
 let data: any;
@@ -16,7 +17,6 @@ if (window.location.hostname === "localhost") {
     userId: testUserId,
   };
 } else {
-  // Following code parses URL of dialog to extract required data including "data" parameter
   const queryString = window.location.search.substring(1);
   let params: any = {};
   const queryStringParts = queryString.split("&");
@@ -26,7 +26,6 @@ if (window.location.hostname === "localhost") {
       pieces.length === 1 ? null : decodeURIComponent(pieces[1]);
   }
 
-  // Deserializing of the data parameter
   if (params.data) {
     data = JSON.parse(params.data);
   } else {
@@ -37,17 +36,11 @@ if (window.location.hostname === "localhost") {
   }
 }
 
-if (!Xrm) {
-  console.error(
-    "Unable to fetch Xrm context. Ensure this page is running within Dynamics 365."
-  );
-} else {
-  const container = document.getElementById("root");
-  const root = createRoot(container!);
+const container = document.getElementById("root");
+const root = createRoot(container!);
 
-  root.render(
-    <React.StrictMode>
-      <App selectedItems={data.selectedItems} userId={data.userId} Xrm={Xrm} />
-    </React.StrictMode>
-  );
-}
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
