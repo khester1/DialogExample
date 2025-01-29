@@ -66,7 +66,7 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                 <div style={{ gridColumn: "1 / span 2", gridRow: "1" }}>
                   <LabelWorkflowComponent text="Select Carrier" />
                 </div>
-                <div style={{ gridColumn: "3/ span 4", gridRow: "1" }}>
+                <div style={{ gridColumn: "3/ span 3", gridRow: "1" }}>
                   <SearchWorkflowComponent
                     options={carrierOptions}
                     onSearch={handleCarrierSearch}
@@ -81,7 +81,7 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                 <div style={{ gridColumn: "1 / span 2", gridRow: "2" }}>
                   <LabelWorkflowComponent text="Select Driver" />
                 </div>
-                <div style={{ gridColumn: "3/ span 4", gridRow: "2" }}>
+                <div style={{ gridColumn: "3/ span 3", gridRow: "2" }}>
                   <SearchWorkflowComponent
                     options={driverOptions}
                     onSearch={handleDriverSearch}

@@ -18,7 +18,7 @@ type DialogProps = {
 const dialogStyles = {
   main: {
     width: "auto", // Let the dialog auto-size based on content
-    minWidth: "400px", // Optional: set a minimum width if needed
+    minWidth: "1000px !important", // Optional: set a minimum width if needed
     maxWidth: "100%", // Optional: set a max width based on screen size
   },
 };

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
 import { useId, useBoolean } from "@fluentui/react-hooks";
-import styles from "./dialog.module.css";
+import styles from "./DialogComponent.module.css";
 
 type DialogProps = {
   onValueChange: (newValue: boolean) => void;
@@ -18,7 +18,7 @@ type DialogProps = {
 const dialogStyles = {
   main: {
     width: "auto", // Let the dialog auto-size based on content
-    minWidth: "400px", // Optional: set a minimum width if needed
+    minWidth: "1000px !im", // Optional: set a minimum width if needed
     maxWidth: "100%", // Optional: set a max width based on screen size
   },
 };
@@ -47,7 +47,7 @@ export const DialogComponent: React.FC<DialogProps> = ({
     () => ({
       titleAriaId: labelId,
       subtitleAriaId: subTextId,
-      isBlocking: false,
+      isBlocking: true,
       isModeless: true,
       isDarkOverlay: false,
       styles: dialogStyles, // Ensure dynamic width here

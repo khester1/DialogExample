@@ -3,13 +3,14 @@ import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
 import { useBoolean } from "@fluentui/react-hooks";
 
 import { DialogFooter, MessageBarType } from "@fluentui/react";
-import { DialogWorkflowComponent } from "../default/dialog.workflowselector";
-import FormWorkflowComponent from "../../form/form.workflow.component";
-import SectionWorkflowComponent from "../../section/section.workflow.component";
-import { LabelWorkflowComponent } from "../../field/label.workflow.component";
-import CommandBarWorkflowComponent from "../../commandbar/commandbar.workflow";
+
 import { DetailsListWorkflowComponent } from "../../detailslist/detaillist.workflow.component";
 import { DetailsListWorkflowSupplierComponent } from "../../detailslist/detaillist.workflow.supplier.component";
+import CommandBarWorkflowComponent from "../../commandbar/commandbar.workflow";
+import { LabelWorkflowComponent } from "../../field/label.workflow.component";
+import SectionWorkflowComponent from "../../section/section.workflow.component";
+import FormWorkflowComponent from "../../form/form.workflow.component";
+import { DialogWorkflowComponent } from "../default/dialog.workflowselector";
 
 const DialogWorkflowSupplierGrid: React.FC = () => {
   const contractItems = [

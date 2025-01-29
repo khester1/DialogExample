@@ -49,7 +49,7 @@ const DialogWorkflowInventorySelector: React.FC = () => {
                 rowPosition={1}
                 notification={notification}
               >
-                <div style={{ gridColumn: "1 / span 12", gridRow: "3" }}>
+                <div style={{ gridColumn: "1 / span 4", gridRow: "3" }}>
                   <SearchWorkflowComponent
                     options={options}
                     onSearch={handleSearch}
