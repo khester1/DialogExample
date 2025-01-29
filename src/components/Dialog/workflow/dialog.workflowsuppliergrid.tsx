@@ -82,8 +82,7 @@ const DialogWorkflowSupplierGrid: React.FC = () => {
         onValueChange={handleValueChange}
         hidden={hideDialog}
         toggleHideDialog={toggleHideDialog}
-        cancelButtonText="Cancel"
-        confirmButtonText="Next"
+        minWidth="1200px"
         options={
           <div>
             <FormWorkflowComponent>

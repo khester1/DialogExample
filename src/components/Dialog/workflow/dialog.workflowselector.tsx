@@ -56,8 +56,7 @@ const DialogWorkflowSelector: React.FC = () => {
         onValueChange={() => console.log("Value changed.")}
         hidden={hideDialog}
         toggleHideDialog={toggleHideDialog}
-        cancelButtonText="Cancel"
-        confirmButtonText="Next"
+        minWidth="500px"
         options={
           <div>
             <FormWorkflowComponent>

@@ -13,6 +13,7 @@ import DialogWorkflowDispatchSelector from "./components/dialog/workflow/dialog.
 import { DialogWorkflowComponent } from "./components/dialog/default/dialog.workflowselector";
 import DialogWorkflowSupplierGrid from "./components/dialog/workflow/dialog.workflowsuppliergrid";
 import DialogWorkflowInventorySelector from "./components/dialog/workflow/dialog.workflowinventory";
+import DialogWorkflowContractGrid from "./components/dialog/workflow/dialog.workflowcontractgrid";
 
 initializeIcons();
 
@@ -25,11 +26,12 @@ export interface ICustomDialogProps {
 const App: React.FC<ICustomDialogProps> = ({}) => {
   return (
     <>
-      {/* <DialogWorkflowDispatchSelector /> */}
       {/* <DialogWorkflowSelector /> */}
-      {/* <DialogWorkflowOrderGrid /> */}
+      {/* <DialogWorkflowContractGrid /> */}
+      {/* <DialogWorkflowInventorySelector /> */}
       {/* <DialogWorkflowSupplierGrid /> */}
-      <DialogWorkflowInventorySelector />
+      {/* <DialogWorkflowDispatchSelector /> */}
+      <DialogWorkflowOrderGrid />
     </>
   );
 };

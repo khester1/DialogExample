@@ -6,7 +6,6 @@ import {
 } from "./text-field.workflow.component.styles";
 
 export interface ExtendedTextFieldCustomProps extends ITextFieldProps {
-  enableCopyToClipboard?: boolean;
   highlightColor?: string;
   customTextColor?: string; // Add custom text color prop
   textAlign?: "left" | "center" | "right";

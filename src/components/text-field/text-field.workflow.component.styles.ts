@@ -69,7 +69,7 @@ export const labelStyleExpandDetails = {
 export const readonlyTextFieldStyle = {
   ...textFieldStyle,
   backgroundColor: "#f5f5f5",
-  fontWeight: FontWeights.semilight,
+  fontWeight: FontWeights.bold,
   cursor: "not-allowed",
 };
 

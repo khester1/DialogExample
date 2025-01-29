@@ -48,7 +48,7 @@ const SectionWorkflowComponent: React.FC<SectionProps> = ({
     // boxShadow:
     //   "0 1.6px 3.6px rgba(0, 0, 0, 0.11), 0 0.3px 0.9px rgba(0, 0, 0, 0.13)",
     borderRadius: "4px",
-    padding: "3px 20px 20px 20px",
+    padding: "0px 0px 20px 0px",
     minWidth: "300px",
     width: "100%",
     overflow: "hidden",
@@ -58,7 +58,7 @@ const SectionWorkflowComponent: React.FC<SectionProps> = ({
   const internalGridStyles: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: `repeat(${internalColumnCount}, 1fr)`,
-    gap: "7px",
+    gap: "10px",
   };
 
   return (

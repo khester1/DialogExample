@@ -2,7 +2,7 @@
 .gridContainer {
   display: grid;
   gap: 20px;
-  padding: 20px;
+  padding: 7px;
   /* background: #faf9f7; */
   grid-template-columns: repeat(12, 1fr); /* 12 equal-width columns */
   border-top: 1px solid rgb(237, 235, 233);

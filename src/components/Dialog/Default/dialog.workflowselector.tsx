@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
 import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
-import { useId, useBoolean } from "@fluentui/react-hooks";
+import { useId } from "@fluentui/react-hooks";
+import { mergeStyles } from "@fluentui/react"; // Import mergeStyles
 import styles from "./dialog.module.css";
 
 type DialogProps = {
@@ -13,14 +14,7 @@ type DialogProps = {
   cancelButtonText?: string;
   confirmButtonText?: string;
   options?: React.ReactNode;
-};
-
-const dialogStyles = {
-  main: {
-    width: "auto", // Let the dialog auto-size based on content
-    minWidth: "1000px !important", // Optional: set a minimum width if needed
-    maxWidth: "100%", // Optional: set a max width based on screen size
-  },
+  minWidth?: string;
 };
 
 export const DialogWorkflowComponent: React.FC<DialogProps> = ({
@@ -32,9 +26,16 @@ export const DialogWorkflowComponent: React.FC<DialogProps> = ({
   cancelButtonText = "Cancel",
   confirmButtonText = "Submit",
   options,
+  minWidth = "1000px",
 }) => {
   const labelId: string = useId("dialogLabel");
   const subTextId: string = useId("subTextLabel");
+
+  // Use mergeStyles to add !important dynamically
+  const dialogClassName = mergeStyles({
+    minWidth: `${minWidth} !important`,
+    maxWidth: "100%",
+  });
 
   const dialogContentProps = {
     type: DialogType.largeHeader,
@@ -50,9 +51,9 @@ export const DialogWorkflowComponent: React.FC<DialogProps> = ({
       isBlocking: false,
       isModeless: true,
       isDarkOverlay: false,
-      styles: dialogStyles, // Ensure dynamic width here
+      styles: { main: dialogClassName }, // Apply merged styles
     }),
-    [labelId, subTextId]
+    [labelId, subTextId, dialogClassName]
   );
 
   const confirm = () => {
@@ -73,10 +74,8 @@ export const DialogWorkflowComponent: React.FC<DialogProps> = ({
       modalProps={modalProps} // Use the modified modalProps
     >
       {options ? (
-        // Render custom components passed via the options prop
-        options
+        options // Render custom components passed via the options prop
       ) : (
-        // Default footer with Cancel and Confirm buttons
         <DialogFooter>
           <DefaultButton onClick={cancel} text={cancelButtonText} />
           <PrimaryButton onClick={confirm} text={confirmButtonText} />

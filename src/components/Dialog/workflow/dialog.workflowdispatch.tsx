@@ -52,8 +52,7 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
         onValueChange={handleValueChange}
         hidden={hideDialog}
         toggleHideDialog={toggleHideDialog}
-        cancelButtonText="Cancel"
-        confirmButtonText="Next"
+        minWidth="800px"
         options={
           <div>
             <FormWorkflowComponent>
@@ -72,10 +71,10 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                     onSearch={handleCarrierSearch}
                   />
                 </div>
-                <div style={{ gridColumn: "8 / span 3", gridRow: "1" }}>
+                <div style={{ gridColumn: "8 / span 4", gridRow: "1" }}>
                   <LabelWorkflowComponent text="Certificate of Insurance: 6/4/2025" />
                 </div>
-                <div style={{ gridColumn: "8 / span 3", gridRow: "2" }}>
+                <div style={{ gridColumn: "8 / span 4", gridRow: "2" }}>
                   <LabelWorkflowComponent text="Service Agreement: 6/14/2023 - V2023" />
                 </div>
                 <div style={{ gridColumn: "1 / span 2", gridRow: "2" }}>
@@ -87,7 +86,7 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                     onSearch={handleDriverSearch}
                   />
                 </div>
-                <div style={{ gridColumn: "1 / span 1", gridRow: "3" }}>
+                <div style={{ gridColumn: "1 / span 2", gridRow: "3" }}>
                   <LabelWorkflowComponent text="Base Rate" />
                 </div>
                 <div style={{ gridColumn: "3 / span 2", gridRow: "3" }}>
@@ -107,7 +106,7 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                   />
                 </div>
 
-                <div style={{ gridColumn: "8 / span 2", gridRow: "3" }}>
+                <div style={{ gridColumn: "8 / span 4", gridRow: "3" }}>
                   <LabelWorkflowComponent
                     text="View Recent Orders"
                     isHeader
@@ -133,10 +132,10 @@ const DialogWorkflowDispatchSelector: React.FC = () => {
                     // }
                   />
                 </div>
-                <div style={{ gridColumn: "5 / span 1", gridRow: "4" }}>
+                <div style={{ gridColumn: "6 / span 2", gridRow: "4" }}>
                   <LabelWorkflowComponent text="Applied Rate" />
                 </div>
-                <div style={{ gridColumn: "6/ span 2", gridRow: "4" }}>
+                <div style={{ gridColumn: "8/ span 2", gridRow: "4" }}>
                   <TextFieldWorkflowComponent
                     underlined={false}
                     textAlign="left"

@@ -38,8 +38,7 @@ const DialogWorkflowInventorySelector: React.FC = () => {
         onValueChange={handleValueChange}
         hidden={hideDialog}
         toggleHideDialog={toggleHideDialog}
-        cancelButtonText="Cancel"
-        confirmButtonText="Next"
+        minWidth="500px"
         options={
           <div>
             <FormWorkflowComponent>
@@ -49,7 +48,7 @@ const DialogWorkflowInventorySelector: React.FC = () => {
                 rowPosition={1}
                 notification={notification}
               >
-                <div style={{ gridColumn: "1 / span 4", gridRow: "3" }}>
+                <div style={{ gridColumn: "1 / span 8", gridRow: "4" }}>
                   <SearchWorkflowComponent
                     options={options}
                     onSearch={handleSearch}
