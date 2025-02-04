@@ -1,4 +1,4 @@
-export interface OrderUpdate {
+export interface Order {
   stn_orderid: string;
   stn_creditreleasedby: string; // Should be the GUID of the user
   stn_creditreleaseddate: string;
@@ -16,7 +16,7 @@ export class Service {
     this.Xrm = Xrm;
   }
 
-  public async updateOrders(updates: OrderUpdate[]): Promise<void> {
+  public async updateOrders(updates: Order[]): Promise<void> {
     try {
       for (const update of updates) {
         // Prepare the record object
@@ -27,7 +27,7 @@ export class Service {
           statuscode: update.statuscode,
         };
 
-        // Call the Web API to update the record
+        //Possible Separeate Class to handles this for local and real testing
         await this.Xrm.WebApi.updateRecord(
           "stn_order",
           update.stn_orderid,

@@ -1,0 +1,34 @@
+// src/services/ServiceFactory.ts
+import { IApiService } from "./IApiService";
+import { MockApiService } from "./MockApiService";
+import { XrmApiService } from "./XrmApiService";
+
+export class ServiceFactory {
+  // Toggle this flag or use environment variables as needed.
+  // Here, for example, we assume that if we're running on localhost then it's a mock environment.
+  public static isMockEnvironment: boolean =
+    window.location.hostname === "localhost";
+
+  /**
+   * Creates and returns an API service instance.
+   *
+   * @param Xrm Optional Xrm context; required when not in a mock environment.
+   */
+  public static createApiService(Xrm?: any): IApiService {
+    let apiService: IApiService;
+
+    if (ServiceFactory.isMockEnvironment) {
+      // For local testing, you might want to use the mock implementation.
+      apiService = new MockApiService();
+      // Alternatively, if you prefer using fetch:
+      // apiService = new FetchApiService("https://yourorg.api.crm.dynamics.com/api/data/v9.0");
+    } else {
+      if (!Xrm) {
+        throw new Error("Xrm object is required in a non-mock environment");
+      }
+      apiService = new XrmApiService(Xrm);
+    }
+
+    return apiService;
+  }
+}

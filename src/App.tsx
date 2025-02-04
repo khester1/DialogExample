@@ -6,7 +6,8 @@ import { DialogFooter } from "@fluentui/react";
 import { DialogComponent } from "./components/dialog/default/dialog.component";
 import ReasonFormComponent from "./components/section/section.creditreleasereason";
 import { IComboBoxOption } from "@fluentui/react";
-import { Service, OrderUpdate } from "./components/services/service";
+import { Service, Order } from "./services/service";
+//SErvice Factory
 
 export interface ICustomDialogProps {
   selectedItems: string[] | undefined;
@@ -52,7 +53,7 @@ const App: React.FC<ICustomDialogProps> = ({ userId, selectedItems, Xrm }) => {
         setErrorMessage(null);
 
         // Prepare the order updates
-        const updates: OrderUpdate[] = selectedOrderIds.map((orderId) => ({
+        const updates: Order[] = selectedOrderIds.map((orderId) => ({
           stn_orderid: orderId,
           stn_creditreleasedby: userId, // Pass userId directly
           stn_creditreleaseddate: new Date().toISOString(),
